@@ -3,12 +3,14 @@
 2.Общение между модулями — через IEventBus.
 3.MonoBehaviour — только для визуала и сбора ввода.
 3.Сервисы — чистая логика без ссылок на Unity.
+
 /// <summary>
 /// Шаблон для создания нового события.
 /// Описывает одно значимое изменение или действие в системе.
 /// </summary>
 public record [Имя]Event // Пример: PlayerHealthChangedEvent
 {
+
     // Используйте свойства только для чтения (get;) для иммутабельности
     public ТипСвойства PropertyName { get; }
     public ТипСвойства AnotherProperty { get; }
@@ -19,23 +21,27 @@ public record [Имя]Event // Пример: PlayerHealthChangedEvent
         AnotherProperty = anotherProperty;
     }
 }
+
 /// <summary>
 /// Шаблон интерфейса сервиса.
 /// Описывает контракт, который реализует конкретный сервис.
 /// </summary>
 public interface I[Имя]Service // Пример: IInventoryService, IProgressService
 {
+
     // Определите публичные методы и свойства здесь.
     // Избегайте конкретных типов Unity в публичном API, где это возможно.
     ReturnType PerformAction(ParameterType parameter);
     event Action<RelevantEvent> OnSomethingHappened;
 }
+
 /// <summary>
 /// Шаблон реализации сервиса.
 /// Содержит бизнес-логику. Должен быть чистым C# (без MonoBehaviour).
 /// </summary>
 public class [Имя]Service : I[Имя]Service // Пример: ProgressService : IProgressService
 {
+
     // 1. Зависимости - приватные поля readonly
     private readonly IEventBus _eventBus;
     private readonly IOtherService _dependency;
@@ -76,8 +82,10 @@ public class [Имя]Service : I[Имя]Service // Пример: ProgressService
 /// Шаблон для создания нового состояния игры.
 /// Наследуйте от BaseGameState для автоматической публикации GameStateChangedEvent.
 /// </summary>
+
 public class [Имя]State : BaseGameState // Пример: DialogueState, ShopState
 {
+
     public override GameStateType StateType => GameStateType.[НовыйТип]; // Нужно добавить enum
     // Возможные зависимости состояния
     private readonly IUIService _uiService;
@@ -113,6 +121,7 @@ using VContainer.Unity;
 /// </summary>
 public class GameLifetimeScope : LifetimeScope
 {
+
     protected override void Configure(IContainerBuilder builder)
     {
         // 1. Регистрация глобальных сервисов (Singleton)
@@ -153,6 +162,7 @@ using VContainer;
 /// </summary>
 public class [Имя]Handler : MonoBehaviour // Пример: DoorInteractionHandler
 {
+    
     // === ЗАВИСИМОСТИ (инжектятся) ===
     private IEventBus _eventBus;
     private I[Соответствующий]Service _service; // Пример: IInteractionService
