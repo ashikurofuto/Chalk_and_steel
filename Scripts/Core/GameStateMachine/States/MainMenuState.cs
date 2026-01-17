@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.SceneManagement;
 
 namespace Core.StateMachine
 {
@@ -13,8 +14,7 @@ namespace Core.StateMachine
 
         public override void Enter()
         {
-            base.Enter();
-            // Будущая логика: показать UI главного меню
+            SceneManager.LoadScene(1);
         }
 
         public override void Exit()

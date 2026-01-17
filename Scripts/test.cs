@@ -1,16 +1,20 @@
+using Architecture.GlobalModules;
 using UnityEngine;
+using VContainer;
 
 public class test : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private IGameStateMachine gameStateMachine;
+
+    [Inject]
+    public void Construct(IGameStateMachine gameStateMachine)
     {
-        
+        this.gameStateMachine = gameStateMachine;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        gameStateMachine.StartMenuState();
     }
+
 }

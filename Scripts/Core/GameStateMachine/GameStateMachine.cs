@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Core.StateMachine;
+using UnityEngine;
 
 namespace Architecture.GlobalModules
 {
@@ -68,7 +69,7 @@ namespace Architecture.GlobalModules
             _currentState?.Exit();
             _currentState = newState;
             _currentState.Enter();
-
+            Debug.Log($"prev state: {previousStateType}, now is state: {_currentState}");
             _eventBus.Publish(new GameStateChangedEvent(previousStateType, stateType));
         }
 

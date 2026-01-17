@@ -1,4 +1,6 @@
-﻿namespace Core.StateMachine
+﻿using UnityEngine.SceneManagement;
+
+namespace Core.StateMachine
 {
     /// <summary>
     /// Состояние игрового хаба (карта или база).
@@ -11,8 +13,7 @@
 
         public override void Enter()
         {
-            base.Enter();
-            // Будущая логика: загрузить хаб, показать карту
+            SceneManager.LoadScene(2);
         }
 
         public override void Exit()

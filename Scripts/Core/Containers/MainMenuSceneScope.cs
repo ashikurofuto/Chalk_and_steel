@@ -1,7 +1,7 @@
 using VContainer;
 using VContainer.Unity;
 
-public class EmptySceneScope : LifetimeScope
+public class MainMenuSceneScope : LifetimeScope 
 {
     protected override void Configure(IContainerBuilder builder)
     {
