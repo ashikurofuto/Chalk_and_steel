@@ -10,6 +10,3 @@ public interface IHubMovementService
         void MoveTo(Vector3Int targetPosition);
         Vector3Int GetCurrentPosition();
 }
-
-
-
