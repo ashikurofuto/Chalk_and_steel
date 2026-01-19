@@ -14,7 +14,7 @@ namespace Game.Handlers
     {
         // === ЗАВИСИМОСТИ (инжектятся) ===
         private IEventBus _eventBus;
-        private IHubMovementService _movementService;
+        private IMovementService _movementService;
         private IInputService _inputService;
 
         // === ССЫЛКИ НА СЦЕНУ (настраиваются в инспекторе) ===
@@ -42,7 +42,7 @@ namespace Game.Handlers
         [Inject]
         private void Construct(
             IEventBus eventBus,
-            IHubMovementService movementService,
+            IMovementService movementService,
             IInputService inputService)
         {
             _eventBus = eventBus;

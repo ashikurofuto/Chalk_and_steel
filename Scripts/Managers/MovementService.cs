@@ -7,7 +7,9 @@ namespace Architecture.GlobalModules
     /// Сервис управления движением в хабе.
     /// Содержит логику проверки возможности перемещения по тайлмапу.
     /// </summary>
-    public sealed class HubMovementService : IHubMovementService
+    public sealed class MovementService : IMovementService
+
+
     {
         private Tilemap _groundTilemap;
         private Tilemap _borderTilemap;

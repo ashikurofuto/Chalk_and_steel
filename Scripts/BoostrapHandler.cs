@@ -5,7 +5,7 @@ using VContainer;
 
 
 //BOOSTRAP SCENE 
-public class test : MonoBehaviour
+public class BoostrapHandler : MonoBehaviour
 {
     private IGameStateMachine gameStateMachine;
 

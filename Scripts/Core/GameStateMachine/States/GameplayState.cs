@@ -1,30 +1,31 @@
-﻿namespace Core.StateMachine
+﻿// Core/GameStateMachine/States/GameplayState.cs
+using Architecture.GlobalModules;
+using ChalkAndSteel.Services;
+
+namespace Core.StateMachine
 {
     /// <summary>
-    /// Основное игровое состояние (геймплей в подземелье).
+    /// Основное игровое состояние.
     /// </summary>
     public class GameplayState : BaseState
     {
-        public GameplayState() : base(StateType.Gameplay)
+        private readonly IEventBus _eventBus;
+
+
+        public GameplayState(
+            IEventBus eventBus,
+            IPlayerService playerService) : base(StateType.Gameplay)
         {
+            _eventBus = eventBus;
+
         }
 
         public override void Enter()
         {
             base.Enter();
-            // Будущая логика: загрузить комнату, активировать игрока
+        
         }
 
-        public override void Update()
-        {
-            base.Update();
-            // Будущая логика: обновление геймплея
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-            // Будущая логика: выгрузить комнату
-        }
+     
     }
 }

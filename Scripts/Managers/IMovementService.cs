@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 /// <summary>
 /// Интерфейс управления движением в хабе.
 /// </summary>
-public interface IHubMovementService
+public interface IMovementService
     {
         void Initialize(Tilemap groundTilemap, Tilemap borderTilemap, Vector3Int startPosition);
         bool CanMoveTo(Vector3Int targetPosition);
