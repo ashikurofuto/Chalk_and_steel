@@ -46,7 +46,7 @@ namespace ChalkAndSteel.Services
             _currentGenerationOrigin = generationOrigin;
 
             ClearDungeon();
-            GenerateDungeonWithOpenDoors(config);
+            GenerateHybridDungeon(config);
 
             Debug.Log($"Сгенерировано подземелье: {_generatedRooms.Count} комнат (цель: {config.RoomsCount})");
             return _generatedRooms.AsReadOnly();
@@ -69,8 +69,6 @@ namespace ChalkAndSteel.Services
                         GameObject.Destroy(roomData.RoomObject);
                     else
                         GameObject.DestroyImmediate(roomData.RoomObject);
-#else
-                    GameObject.Destroy(roomData.RoomObject);
 #endif
                 }
             }
@@ -98,8 +96,8 @@ namespace ChalkAndSteel.Services
             return _roomGrid.TryGetValue(gridPosition, out var room) ? room : null;
         }
 
-        // ИСПРАВЛЕННЫЙ АЛГОРИТМ: Все двери открываются сразу при создании комнат
-        private void GenerateDungeonWithOpenDoors(DungeonGenerationConfig config)
+        // ГИБРИДНЫЙ АЛГОРИТМ: объединяем два подхода
+        private void GenerateHybridDungeon(DungeonGenerationConfig config)
         {
             int roomSize = config.RoomSize > 0 ? config.RoomSize : 11;
 
@@ -109,23 +107,22 @@ namespace ChalkAndSteel.Services
             _generatedRooms.Add(startRoom);
             _roomGrid[startPosition] = startRoom;
 
-            // 2. Список активных комнат (комнаты, которые могут создавать соседей)
-            var activeRooms = new List<RoomData> { startRoom };
+            // 2. Список комнат для расширения
+            var roomsToExpand = new List<RoomData> { startRoom };
             int roomsGenerated = 1;
 
             // 3. Основной цикл генерации
-            while (roomsGenerated < config.RoomsCount && activeRooms.Count > 0)
+            while (roomsGenerated < config.RoomsCount && roomsToExpand.Count > 0)
             {
-                // Выбираем последнюю активную комнату
-                RoomData currentRoom = activeRooms[activeRooms.Count - 1];
+                // Выбираем комнату для расширения (последнюю в списке)
+                RoomData currentRoom = roomsToExpand[roomsToExpand.Count - 1];
 
-                // Получаем свободные направления для этой комнаты
+                // Получаем свободные направления
                 var freeDirections = GetFreeDirections(currentRoom.GridPosition, roomSize);
 
                 if (freeDirections.Count == 0)
                 {
-                    // Если у текущей комнаты нет свободных направлений, удаляем ее из активных
-                    activeRooms.RemoveAt(activeRooms.Count - 1);
+                    roomsToExpand.RemoveAt(roomsToExpand.Count - 1);
                     continue;
                 }
 
@@ -136,7 +133,7 @@ namespace ChalkAndSteel.Services
 
                 if (roomsToCreate == 0)
                 {
-                    activeRooms.RemoveAt(activeRooms.Count - 1);
+                    roomsToExpand.RemoveAt(roomsToExpand.Count - 1);
                     continue;
                 }
 
@@ -144,27 +141,28 @@ namespace ChalkAndSteel.Services
                 ShuffleList(freeDirections);
                 var createdRooms = new List<RoomData>();
 
+                // КОЛЛЕКЦИЯ ВСЕХ НОВЫХ ДВЕРЕЙ ДЛЯ ТЕКУЩЕЙ КОМНАТЫ
+                var allNewDoorsForCurrentRoom = DoorDirections.None;
+
                 for (int i = 0; i < roomsToCreate; i++)
                 {
                     var direction = freeDirections[i];
                     Vector3Int newPos = currentRoom.GridPosition + GetDirectionVector(direction) * roomSize;
 
-                    // Проверяем, не занята ли позиция
                     if (_roomGrid.ContainsKey(newPos))
                         continue;
 
                     // Определяем тип комнаты
                     RoomType roomType = DetermineRoomType(config, roomsGenerated);
 
-                    // КЛЮЧЕВОЙ МОМЕНТ: сразу открываем дверь для входа в новую комнату
+                    // ВАЖНО: Для КАЖДОЙ новой комнаты:
+                    // 1. Создаем комнату с открытой входной дверью
                     var oppositeDirection = _doorHelper.GetOppositeDirection(direction);
+                    var newRoom = CreateRoom(newPos, roomType,
+                        _doorHelper.AddDoor(DoorDirections.None, oppositeDirection), roomSize);
 
-                    // Создаем комнату с уже открытой входной дверью
-                    var newRoom = CreateRoom(newPos, roomType, _doorHelper.AddDoor(DoorDirections.None, oppositeDirection), roomSize);
-
-                    // ОТКРЫВАЕМ ДВЕРЬ В РОДИТЕЛЬСКОЙ КОМНАТЕ ТОЖЕ
-                    var parentNewDoors = _doorHelper.AddDoor(currentRoom.Doors, direction);
-                    UpdateRoomDoors(currentRoom, parentNewDoors);
+                    // 2. Запоминаем, что нужно открыть дверь в текущей комнате
+                    allNewDoorsForCurrentRoom = _doorHelper.AddDoor(allNewDoorsForCurrentRoom, direction);
 
                     // Добавляем комнату
                     _generatedRooms.Add(newRoom);
@@ -173,39 +171,49 @@ namespace ChalkAndSteel.Services
 
                     roomsGenerated++;
 
-                    Debug.Log($"Создана комната {roomType} в {newPos} в направлении {direction}");
-                    Debug.Log($"  Входная дверь: {oppositeDirection} в новой комнате");
-                    Debug.Log($"  Выходная дверь: {direction} в родительской комнате");
+                    Debug.Log($"Создана комната {roomType} в {newPos}, вход: {oppositeDirection}");
+                }
+
+                // КЛЮЧЕВОЙ МОМЕНТ: Открываем ВСЕ двери в текущей комнате
+                if (allNewDoorsForCurrentRoom != DoorDirections.None)
+                {
+                    var updatedDoors = _doorHelper.AddDoor(currentRoom.Doors, allNewDoorsForCurrentRoom);
+                    UpdateRoomDoors(currentRoom, updatedDoors);
+                    Debug.Log($"Открыты двери в комнате {currentRoom.GridPosition}: {allNewDoorsForCurrentRoom}");
                 }
 
                 // Выбираем одну из созданных комнат для продолжения генерации
                 if (createdRooms.Count > 0)
                 {
+                    // Случайно выбираем следующую комнату
                     RoomData nextRoom = createdRooms[UnityEngine.Random.Range(0, createdRooms.Count)];
 
-                    // Удаляем текущую комнату из активных
-                    activeRooms.RemoveAt(activeRooms.Count - 1);
+                    // Удаляем текущую комнату из списка расширения
+                    roomsToExpand.RemoveAt(roomsToExpand.Count - 1);
 
-                    // Добавляем все созданные комнаты в активные (они могут создавать свои ветки)
+                    // Добавляем выбранную комнату для продолжения
+                    roomsToExpand.Add(nextRoom);
+
+                    // Остальные комнаты тоже могут расширяться позже
                     foreach (var room in createdRooms)
                     {
-                        if (!activeRooms.Contains(room))
+                        if (room != nextRoom && !roomsToExpand.Contains(room))
                         {
-                            activeRooms.Add(room);
+                            roomsToExpand.Add(room);
                         }
                     }
                 }
                 else
                 {
-                    // Если не удалось создать ни одной комнаты, удаляем текущую из активных
-                    activeRooms.RemoveAt(activeRooms.Count - 1);
+                    roomsToExpand.RemoveAt(roomsToExpand.Count - 1);
                 }
             }
 
             // 4. Финальная проверка: закрываем все висячие двери
             CleanupStrayDoors(roomSize);
 
-            Debug.Log($"Генерация завершена. Создано {roomsGenerated} комнат.");
+            // 5. Отладочная информация
+            DebugDungeonStructure();
         }
 
         // Вспомогательные методы
@@ -213,7 +221,6 @@ namespace ChalkAndSteel.Services
         {
             var freeDirections = new List<DoorDirections>();
 
-            // Проверяем все 4 направления
             if (!_roomGrid.ContainsKey(position + Vector3Int.up * roomSize))
                 freeDirections.Add(DoorDirections.North);
 
@@ -252,7 +259,6 @@ namespace ChalkAndSteel.Services
 
         private void CleanupStrayDoors(int roomSize)
         {
-            // Создаем копию списка комнат для безопасной итерации
             var roomsCopy = new List<RoomData>(_generatedRooms);
 
             foreach (var room in roomsCopy)
@@ -260,14 +266,11 @@ namespace ChalkAndSteel.Services
                 var currentDoors = room.Doors;
                 var validDoors = DoorDirections.None;
 
-                // Проверяем каждую дверь
                 if (_doorHelper.HasDoor(currentDoors, DoorDirections.North))
                 {
                     Vector3Int neighborPos = room.GridPosition + Vector3Int.up * roomSize;
                     if (_roomGrid.ContainsKey(neighborPos))
                         validDoors = _doorHelper.AddDoor(validDoors, DoorDirections.North);
-                    else
-                        Debug.Log($"Закрываем висячую дверь на север в комнате {room.GridPosition}");
                 }
 
                 if (_doorHelper.HasDoor(currentDoors, DoorDirections.East))
@@ -275,8 +278,6 @@ namespace ChalkAndSteel.Services
                     Vector3Int neighborPos = room.GridPosition + Vector3Int.right * roomSize;
                     if (_roomGrid.ContainsKey(neighborPos))
                         validDoors = _doorHelper.AddDoor(validDoors, DoorDirections.East);
-                    else
-                        Debug.Log($"Закрываем висячую дверь на восток в комнате {room.GridPosition}");
                 }
 
                 if (_doorHelper.HasDoor(currentDoors, DoorDirections.South))
@@ -284,8 +285,6 @@ namespace ChalkAndSteel.Services
                     Vector3Int neighborPos = room.GridPosition + Vector3Int.down * roomSize;
                     if (_roomGrid.ContainsKey(neighborPos))
                         validDoors = _doorHelper.AddDoor(validDoors, DoorDirections.South);
-                    else
-                        Debug.Log($"Закрываем висячую дверь на юг в комнате {room.GridPosition}");
                 }
 
                 if (_doorHelper.HasDoor(currentDoors, DoorDirections.West))
@@ -293,16 +292,29 @@ namespace ChalkAndSteel.Services
                     Vector3Int neighborPos = room.GridPosition + Vector3Int.left * roomSize;
                     if (_roomGrid.ContainsKey(neighborPos))
                         validDoors = _doorHelper.AddDoor(validDoors, DoorDirections.West);
-                    else
-                        Debug.Log($"Закрываем висячую дверь на запад в комнате {room.GridPosition}");
                 }
 
-                // Обновляем если есть изменения
                 if (validDoors != currentDoors)
                 {
                     UpdateRoomDoors(room, validDoors);
                 }
             }
+        }
+
+        private void DebugDungeonStructure()
+        {
+            Debug.Log("=== СТРУКТУРА ПОДЗЕМЕЛЬЯ ===");
+            foreach (var room in _generatedRooms)
+            {
+                string doors = "";
+                if (_doorHelper.HasDoor(room.Doors, DoorDirections.North)) doors += "↑";
+                if (_doorHelper.HasDoor(room.Doors, DoorDirections.East)) doors += "→";
+                if (_doorHelper.HasDoor(room.Doors, DoorDirections.South)) doors += "↓";
+                if (_doorHelper.HasDoor(room.Doors, DoorDirections.West)) doors += "←";
+
+                Debug.Log($"{room.GridPosition}: {room.RoomType} [{doors}]");
+            }
+            Debug.Log("==========================");
         }
 
         private RoomType DetermineRoomType(DungeonGenerationConfig config, int roomIndex)
@@ -359,7 +371,6 @@ namespace ChalkAndSteel.Services
                 roomInfo.SetDoors(newDoors);
             }
 
-            // Обновляем данные комнаты в списке
             var index = _generatedRooms.IndexOf(room);
             if (index >= 0)
             {
