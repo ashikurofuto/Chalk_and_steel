@@ -40,7 +40,7 @@ namespace ChalkAndSteel.Services
                 throw new InvalidOperationException("Сервис генерации подземелья не инициализирован.");
 
             if (config.RoomsCount <= 0)
-                throw new ArgumentException("Количество комнат должно быть положительным", nameof(config.RoomsCount));
+                throw new ArgumentException("Количество комнат должна быть положительным", nameof(config.RoomsCount));
 
             _currentConfig = config;
             _currentGenerationOrigin = generationOrigin;
@@ -54,7 +54,14 @@ namespace ChalkAndSteel.Services
 
         public IReadOnlyList<RoomData> GenerateDungeon(int roomsCount, Transform generationOrigin)
         {
-            var config = new DungeonGenerationConfig { RoomsCount = roomsCount };
+            var config = new DungeonGenerationConfig
+            {
+                RoomsCount = roomsCount,
+                // Уменьшаем шансы по умолчанию
+                BossRoomChance = 0.02f,      // 2% шанс босса в середине
+                TreasureRoomChance = 0.03f,  // 3% шанс сокровищницы
+                SpecialRoomChance = 0.01f    // 1% шанс особой комнаты
+            };
             return GenerateDungeon(config, generationOrigin);
         }
 
@@ -69,6 +76,8 @@ namespace ChalkAndSteel.Services
                         GameObject.Destroy(roomData.RoomObject);
                     else
                         GameObject.DestroyImmediate(roomData.RoomObject);
+#else
+                    GameObject.Destroy(roomData.RoomObject);
 #endif
                 }
             }
@@ -96,7 +105,7 @@ namespace ChalkAndSteel.Services
             return _roomGrid.TryGetValue(gridPosition, out var room) ? room : null;
         }
 
-        // ГИБРИДНЫЙ АЛГОРИТМ: объединяем два подхода
+        // ГИБРИДНЫЙ АЛГОРИТМ: с уменьшенными шансами особых комнат и гарантированным боссом в конце
         private void GenerateHybridDungeon(DungeonGenerationConfig config)
         {
             int roomSize = config.RoomSize > 0 ? config.RoomSize : 11;
@@ -114,10 +123,8 @@ namespace ChalkAndSteel.Services
             // 3. Основной цикл генерации
             while (roomsGenerated < config.RoomsCount && roomsToExpand.Count > 0)
             {
-                // Выбираем комнату для расширения (последнюю в списке)
                 RoomData currentRoom = roomsToExpand[roomsToExpand.Count - 1];
 
-                // Получаем свободные направления
                 var freeDirections = GetFreeDirections(currentRoom.GridPosition, roomSize);
 
                 if (freeDirections.Count == 0)
@@ -126,8 +133,7 @@ namespace ChalkAndSteel.Services
                     continue;
                 }
 
-                // Решаем: создаем 1 или 2 соседние комнаты
-                int roomsToCreate = UnityEngine.Random.Range(1, 3); // 1 или 2
+                int roomsToCreate = UnityEngine.Random.Range(1, 3);
                 roomsToCreate = Mathf.Min(roomsToCreate, freeDirections.Count);
                 roomsToCreate = Mathf.Min(roomsToCreate, config.RoomsCount - roomsGenerated);
 
@@ -137,11 +143,8 @@ namespace ChalkAndSteel.Services
                     continue;
                 }
 
-                // Выбираем случайные свободные направления
                 ShuffleList(freeDirections);
                 var createdRooms = new List<RoomData>();
-
-                // КОЛЛЕКЦИЯ ВСЕХ НОВЫХ ДВЕРЕЙ ДЛЯ ТЕКУЩЕЙ КОМНАТЫ
                 var allNewDoorsForCurrentRoom = DoorDirections.None;
 
                 for (int i = 0; i < roomsToCreate; i++)
@@ -152,49 +155,53 @@ namespace ChalkAndSteel.Services
                     if (_roomGrid.ContainsKey(newPos))
                         continue;
 
-                    // Определяем тип комнаты
-                    RoomType roomType = DetermineRoomType(config, roomsGenerated);
+                    // ИЗМЕНЕНИЕ: Определяем тип комнаты с учетом порядка генерации
+                    RoomType roomType;
 
-                    // ВАЖНО: Для КАЖДОЙ новой комнаты:
-                    // 1. Создаем комнату с открытой входной дверью
+                    // Если это последняя комната, которая будет создана - делаем ее боссом
+                    if (roomsGenerated == config.RoomsCount - 1)
+                    {
+                        roomType = RoomType.BossRoom;
+                        Debug.Log($"Последняя комната (#{roomsGenerated + 1}) - БОСС в позиции {newPos}");
+                    }
+                    // Если это предпоследняя комната - можно сделать сокровищницей
+                    else if (roomsGenerated == config.RoomsCount - 2)
+                    {
+                        roomType = RoomType.TreasureRoom;
+                        Debug.Log($"Предпоследняя комната (#{roomsGenerated + 1}) - СОКРОВИЩНИЦА в позиции {newPos}");
+                    }
+                    else
+                    {
+                        // Для остальных комнат используем обычную логику с уменьшенными шансами
+                        roomType = DetermineRoomTypeWithReducedChances(config, roomsGenerated);
+                    }
+
                     var oppositeDirection = _doorHelper.GetOppositeDirection(direction);
                     var newRoom = CreateRoom(newPos, roomType,
                         _doorHelper.AddDoor(DoorDirections.None, oppositeDirection), roomSize);
 
-                    // 2. Запоминаем, что нужно открыть дверь в текущей комнате
                     allNewDoorsForCurrentRoom = _doorHelper.AddDoor(allNewDoorsForCurrentRoom, direction);
 
-                    // Добавляем комнату
                     _generatedRooms.Add(newRoom);
                     _roomGrid[newPos] = newRoom;
                     createdRooms.Add(newRoom);
 
                     roomsGenerated++;
-
-                    Debug.Log($"Создана комната {roomType} в {newPos}, вход: {oppositeDirection}");
                 }
 
-                // КЛЮЧЕВОЙ МОМЕНТ: Открываем ВСЕ двери в текущей комнате
                 if (allNewDoorsForCurrentRoom != DoorDirections.None)
                 {
                     var updatedDoors = _doorHelper.AddDoor(currentRoom.Doors, allNewDoorsForCurrentRoom);
                     UpdateRoomDoors(currentRoom, updatedDoors);
-                    Debug.Log($"Открыты двери в комнате {currentRoom.GridPosition}: {allNewDoorsForCurrentRoom}");
                 }
 
-                // Выбираем одну из созданных комнат для продолжения генерации
                 if (createdRooms.Count > 0)
                 {
-                    // Случайно выбираем следующую комнату
                     RoomData nextRoom = createdRooms[UnityEngine.Random.Range(0, createdRooms.Count)];
 
-                    // Удаляем текущую комнату из списка расширения
                     roomsToExpand.RemoveAt(roomsToExpand.Count - 1);
-
-                    // Добавляем выбранную комнату для продолжения
                     roomsToExpand.Add(nextRoom);
 
-                    // Остальные комнаты тоже могут расширяться позже
                     foreach (var room in createdRooms)
                     {
                         if (room != nextRoom && !roomsToExpand.Contains(room))
@@ -209,14 +216,56 @@ namespace ChalkAndSteel.Services
                 }
             }
 
-            // 4. Финальная проверка: закрываем все висячие двери
             CleanupStrayDoors(roomSize);
-
-            // 5. Отладочная информация
             DebugDungeonStructure();
         }
 
-        // Вспомогательные методы
+        // НОВЫЙ МЕТОД: Определение типа комнаты с уменьшенными шансами
+        private RoomType DetermineRoomTypeWithReducedChances(DungeonGenerationConfig config, int roomIndex)
+        {
+            // Стартовая комната уже создана, roomIndex начинается с 1
+            float randomValue = UnityEngine.Random.value;
+
+            // Уменьшенные шансы (можно настроить в конфиге)
+            float bossChance = config.BossRoomChance * 0.1f;         // Уменьшаем шанс босса в 10 раз
+            float treasureChance = config.TreasureRoomChance * 0.2f; // Уменьшаем шанс сокровищницы в 5 раз
+            float specialChance = config.SpecialRoomChance * 0.3f;   // Уменьшаем шанс особой комнаты в 3 раза
+
+            // Накопительные проверки
+            if (randomValue < bossChance)
+            {
+                return RoomType.BossRoom;
+            }
+            else if (randomValue < bossChance + treasureChance)
+            {
+                return RoomType.TreasureRoom;
+            }
+            else if (randomValue < bossChance + treasureChance + specialChance)
+            {
+                return RoomType.SpecialRoom;
+            }
+            else
+            {
+                return RoomType.NormalRoom;
+            }
+        }
+
+        // Оригинальный метод оставляем для совместимости
+        private RoomType DetermineRoomType(DungeonGenerationConfig config, int roomIndex)
+        {
+            if (roomIndex == 0) return RoomType.StartRoom;
+            if (roomIndex == config.RoomsCount - 1) return RoomType.BossRoom;
+            if (roomIndex == config.RoomsCount - 2) return RoomType.TreasureRoom;
+
+            float randomValue = UnityEngine.Random.value;
+
+            if (randomValue < config.BossRoomChance) return RoomType.BossRoom;
+            if (randomValue < config.BossRoomChance + config.TreasureRoomChance) return RoomType.TreasureRoom;
+            if (randomValue < config.BossRoomChance + config.TreasureRoomChance + config.SpecialRoomChance) return RoomType.SpecialRoom;
+
+            return RoomType.NormalRoom;
+        }
+
         private List<DoorDirections> GetFreeDirections(Vector3Int position, int roomSize)
         {
             var freeDirections = new List<DoorDirections>();
@@ -304,6 +353,11 @@ namespace ChalkAndSteel.Services
         private void DebugDungeonStructure()
         {
             Debug.Log("=== СТРУКТУРА ПОДЗЕМЕЛЬЯ ===");
+            int bossCount = 0;
+            int treasureCount = 0;
+            int specialCount = 0;
+            int normalCount = 0;
+
             foreach (var room in _generatedRooms)
             {
                 string doors = "";
@@ -313,23 +367,18 @@ namespace ChalkAndSteel.Services
                 if (_doorHelper.HasDoor(room.Doors, DoorDirections.West)) doors += "←";
 
                 Debug.Log($"{room.GridPosition}: {room.RoomType} [{doors}]");
+
+                switch (room.RoomType)
+                {
+                    case RoomType.BossRoom: bossCount++; break;
+                    case RoomType.TreasureRoom: treasureCount++; break;
+                    case RoomType.SpecialRoom: specialCount++; break;
+                    case RoomType.NormalRoom: normalCount++; break;
+                }
             }
+
+            Debug.Log($"ИТОГО: Боссов: {bossCount}, Сокровищниц: {treasureCount}, Особых: {specialCount}, Обычных: {normalCount}");
             Debug.Log("==========================");
-        }
-
-        private RoomType DetermineRoomType(DungeonGenerationConfig config, int roomIndex)
-        {
-            if (roomIndex == 0) return RoomType.StartRoom;
-            if (roomIndex == config.RoomsCount - 1) return RoomType.BossRoom;
-            if (roomIndex == config.RoomsCount - 2) return RoomType.TreasureRoom;
-
-            float randomValue = UnityEngine.Random.value;
-
-            if (randomValue < config.BossRoomChance) return RoomType.BossRoom;
-            if (randomValue < config.BossRoomChance + config.TreasureRoomChance) return RoomType.TreasureRoom;
-            if (randomValue < config.BossRoomChance + config.TreasureRoomChance + config.SpecialRoomChance) return RoomType.SpecialRoom;
-
-            return RoomType.NormalRoom;
         }
 
         private RoomData CreateRoom(Vector3Int gridPosition, RoomType roomType, DoorDirections doors, int roomSize)
