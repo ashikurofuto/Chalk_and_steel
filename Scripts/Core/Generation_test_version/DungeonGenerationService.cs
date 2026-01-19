@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ChalkAndSteel.Services
@@ -13,6 +14,11 @@ namespace ChalkAndSteel.Services
         private DungeonGenerationConfig _currentConfig;
         private Transform _currentGenerationOrigin;
         private bool _isInitialized = false;
+
+        // Трекеры для специальных комнат
+        private bool _treasureRoomGenerated = false;
+        private bool _shopRoomGenerated = false;
+        private bool _specialRoomGenerated = false;
 
         public bool IsInitialized => _isInitialized;
 
@@ -59,8 +65,8 @@ namespace ChalkAndSteel.Services
                 RoomsCount = roomsCount,
                 TreasureRoomChance = 0.05f,
                 SpecialRoomChance = 0.03f,
-                ShopRoomChance = 0.08f,  // Магазин чаще особых комнат
-                BossRoomChance = 0.00f   // Босс только в конце
+                ShopRoomChance = 0.08f,
+                BossRoomChance = 0.00f
             };
             return GenerateDungeon(config, generationOrigin);
         }
@@ -82,6 +88,10 @@ namespace ChalkAndSteel.Services
 
             _generatedRooms.Clear();
             _roomGrid.Clear();
+
+            // Сбрасываем трекеры
+            ResetSpecialRoomTrackers();
+
             Debug.Log("Подземелье очищено");
         }
 
@@ -103,9 +113,12 @@ namespace ChalkAndSteel.Services
             return _roomGrid.TryGetValue(gridPosition, out var room) ? room : null;
         }
 
-        // ГИБРИДНЫЙ АЛГОРИТМ: с магазином
+        // ГИБРИДНЫЙ АЛГОРИТМ: с магазином и ограничением одной копии каждой специальной комнаты
         private void GenerateHybridDungeon(DungeonGenerationConfig config)
         {
+            // Сбрасываем трекеры при начале генерации нового подземелья
+            ResetSpecialRoomTrackers();
+
             int roomSize = config.RoomSize > 0 ? config.RoomSize : 11;
 
             // 1. Создаем стартовую комнату
@@ -165,8 +178,11 @@ namespace ChalkAndSteel.Services
                     }
                     else
                     {
-                        // Все остальные комнаты определяются случайно
-                        roomType = DetermineRandomRoomTypeWithShop(config, roomsGenerated);
+                        // Все остальные комнаты определяются с учетом ограничения одной копии
+                        roomType = DetermineRandomRoomTypeWithSingleSpecialRooms(config, roomsGenerated);
+
+                        // Обновляем трекеры при создании специальной комнаты
+                        UpdateSpecialRoomTrackers(roomType);
 
                         // Отладочные сообщения для особых комнат
                         switch (roomType)
@@ -227,46 +243,98 @@ namespace ChalkAndSteel.Services
             DebugDungeonStructure();
         }
 
-        // НОВЫЙ МЕТОД: Определение типа комнаты с магазином
-        private RoomType DetermineRandomRoomTypeWithShop(DungeonGenerationConfig config, int roomIndex)
+        // НОВЫЙ МЕТОД: Определение типа комнаты с ограничением одной копии каждой специальной комнаты
+        private RoomType DetermineRandomRoomTypeWithSingleSpecialRooms(DungeonGenerationConfig config, int roomIndex)
         {
-            // Не допускаем босса в середине подземелья
+            // Не допускаем специальные комнаты в первых двух комнатах после стартовой
+            if (roomIndex < 2)
+                return RoomType.NormalRoom;
+
+            // Список доступных типов специальных комнат (еще не сгенерированных)
+            var availableSpecialTypes = new List<RoomType>();
+            var availableChances = new List<float>();
+
+            if (!_treasureRoomGenerated)
+            {
+                availableSpecialTypes.Add(RoomType.TreasureRoom);
+                availableChances.Add(config.TreasureRoomChance);
+            }
+
+            if (!_shopRoomGenerated)
+            {
+                availableSpecialTypes.Add(RoomType.ShopRoom);
+                availableChances.Add(config.ShopRoomChance);
+            }
+
+            if (!_specialRoomGenerated)
+            {
+                availableSpecialTypes.Add(RoomType.SpecialRoom);
+                availableChances.Add(config.SpecialRoomChance);
+            }
+
+            // Если все специальные комнаты уже были созданы - возвращаем обычную комнату
+            if (availableSpecialTypes.Count == 0)
+                return RoomType.NormalRoom;
+
+            // Нормализуем шансы доступных типов
+            float totalAvailableChance = availableChances.Sum();
+
+            // Если сумма шансов больше 1, нормализуем
+            if (totalAvailableChance > 1.0f)
+            {
+                for (int i = 0; i < availableChances.Count; i++)
+                {
+                    availableChances[i] /= totalAvailableChance;
+                }
+                totalAvailableChance = 1.0f;
+            }
+
+            // Вероятность обычной комнаты
+            float normalRoomChance = 1.0f - totalAvailableChance;
+
+            // Генерируем случайное число
             float randomValue = UnityEngine.Random.value;
 
-            // Накопительные шансы (без босса)
-            float treasureChance = config.TreasureRoomChance;
-            float specialChance = config.SpecialRoomChance;
-            float shopChance = config.ShopRoomChance;  // Шанс магазина
+            // Определяем, какой тип комнаты выпал
+            float accumulatedChance = 0f;
 
-            // Сумма всех шансов (без босса)
-            float totalChance = treasureChance + specialChance + shopChance;
-
-            // Если сумма больше 1, нормализуем шансы
-            if (totalChance > 1.0f)
+            // Сначала проверяем специальные комнаты
+            for (int i = 0; i < availableSpecialTypes.Count; i++)
             {
-                treasureChance /= totalChance;
-                specialChance /= totalChance;
-                shopChance /= totalChance;
+                accumulatedChance += availableChances[i];
+                if (randomValue < accumulatedChance)
+                {
+                    return availableSpecialTypes[i];
+                }
             }
 
-            // Определяем тип комнаты по диапазонам
-            if (randomValue < treasureChance)
+            // Если не выпала специальная комната - обычная
+            return RoomType.NormalRoom;
+        }
+
+        // Вспомогательный метод для обновления трекеров
+        private void UpdateSpecialRoomTrackers(RoomType roomType)
+        {
+            switch (roomType)
             {
-                return RoomType.TreasureRoom;
+                case RoomType.TreasureRoom:
+                    _treasureRoomGenerated = true;
+                    break;
+                case RoomType.ShopRoom:
+                    _shopRoomGenerated = true;
+                    break;
+                case RoomType.SpecialRoom:
+                    _specialRoomGenerated = true;
+                    break;
             }
-            else if (randomValue < treasureChance + specialChance)
-            {
-                return RoomType.SpecialRoom;
-            }
-            else if (randomValue < treasureChance + specialChance + shopChance)
-            {
-                return RoomType.ShopRoom;
-            }
-            else
-            {
-                // Оставшаяся вероятность - обычная комната
-                return RoomType.NormalRoom;
-            }
+        }
+
+        // Вспомогательный метод для сброса трекеров
+        private void ResetSpecialRoomTrackers()
+        {
+            _treasureRoomGenerated = false;
+            _shopRoomGenerated = false;
+            _specialRoomGenerated = false;
         }
 
         private List<DoorDirections> GetFreeDirections(Vector3Int position, int roomSize)
@@ -359,7 +427,7 @@ namespace ChalkAndSteel.Services
             int bossCount = 0;
             int treasureCount = 0;
             int specialCount = 0;
-            int shopCount = 0;      // НОВЫЙ СЧЕТЧИК
+            int shopCount = 0;
             int normalCount = 0;
             int roomNumber = 0;
 
@@ -391,13 +459,23 @@ namespace ChalkAndSteel.Services
                     case RoomType.BossRoom: bossCount++; break;
                     case RoomType.TreasureRoom: treasureCount++; break;
                     case RoomType.SpecialRoom: specialCount++; break;
-                    case RoomType.ShopRoom: shopCount++; break;  // НОВЫЙ СЧЕТЧИК
+                    case RoomType.ShopRoom: shopCount++; break;
                     case RoomType.NormalRoom: normalCount++; break;
                 }
             }
 
+            // Проверяем ограничения
+            bool treasureValid = treasureCount <= 1;
+            bool shopValid = shopCount <= 1;
+            bool specialValid = specialCount <= 1;
+
+            string validation = (treasureValid && shopValid && specialValid) ?
+                "✅ Ограничения соблюдены" :
+                $"⚠ Нарушены ограничения: Сокровищниц={treasureCount}, Магазинов={shopCount}, Особых={specialCount}";
+
             Debug.Log($"ИТОГО: Боссов: {bossCount}, Сокровищниц: {treasureCount}, " +
                      $"Особых: {specialCount}, Магазинов: {shopCount}, Обычных: {normalCount}");
+            Debug.Log(validation);
             Debug.Log("==========================");
         }
 
