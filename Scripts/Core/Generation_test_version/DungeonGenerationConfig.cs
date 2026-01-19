@@ -1,15 +1,16 @@
 /// <summary>
-/// Конфигурация генерации подземелья с уменьшенными шансами особых комнат
+/// Конфигурация генерации подземелья с магазином
 /// </summary>
 public record DungeonGenerationConfig
 {
-    public int RoomsCount { get; set; } = 5;
+    public int RoomsCount { get; set; } = 10;
     public int RoomSize { get; set; } = 11;
 
-    // Уменьшенные шансы по умолчанию
-    public float BossRoomChance { get; set; } = 0.02f;      // 2% шанс (было 10%)
-    public float TreasureRoomChance { get; set; } = 0.03f;  // 3% шанс (было 15%)
-    public float SpecialRoomChance { get; set; } = 0.01f;   // 1% шанс (было 5%)
+    // Балансированные шансы по умолчанию
+    public float BossRoomChance { get; set; } = 0.00f;      // 0% шанс в середине (только в конце)
+    public float TreasureRoomChance { get; set; } = 0.05f;  // 5% шанс сокровищницы
+    public float SpecialRoomChance { get; set; } = 0.03f;   // 3% шанс особой комнаты
+    public float ShopRoomChance { get; set; } = 0.08f;      // 8% шанс магазина (НОВЫЙ!)
 
     // Параметры дверей
     public int MinDoorsStart { get; set; } = 1;

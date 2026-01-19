@@ -9,7 +9,7 @@ namespace ChalkAndSteel.Services
         NormalRoom,
         BossRoom,
         TreasureRoom,
-        SpecialRoom
+        SpecialRoom,
+        ShopRoom 
     }
 }
-

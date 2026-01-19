@@ -48,7 +48,7 @@ namespace ChalkAndSteel.Services
             ClearDungeon();
             GenerateHybridDungeon(config);
 
-            Debug.Log($"Сгенерировано подземелье: {_generatedRooms.Count} комнат (цель: {config.RoomsCount})");
+            Debug.Log($"Сгенерировано подземелья: {_generatedRooms.Count} комнат (цель: {config.RoomsCount})");
             return _generatedRooms.AsReadOnly();
         }
 
@@ -57,10 +57,10 @@ namespace ChalkAndSteel.Services
             var config = new DungeonGenerationConfig
             {
                 RoomsCount = roomsCount,
-                // Уменьшаем шансы по умолчанию
-                BossRoomChance = 0.02f,      // 2% шанс босса в середине
-                TreasureRoomChance = 0.03f,  // 3% шанс сокровищницы
-                SpecialRoomChance = 0.01f    // 1% шанс особой комнаты
+                TreasureRoomChance = 0.05f,
+                SpecialRoomChance = 0.03f,
+                ShopRoomChance = 0.08f,  // Магазин чаще особых комнат
+                BossRoomChance = 0.00f   // Босс только в конце
             };
             return GenerateDungeon(config, generationOrigin);
         }
@@ -76,8 +76,6 @@ namespace ChalkAndSteel.Services
                         GameObject.Destroy(roomData.RoomObject);
                     else
                         GameObject.DestroyImmediate(roomData.RoomObject);
-#else
-                    GameObject.Destroy(roomData.RoomObject);
 #endif
                 }
             }
@@ -105,7 +103,7 @@ namespace ChalkAndSteel.Services
             return _roomGrid.TryGetValue(gridPosition, out var room) ? room : null;
         }
 
-        // ГИБРИДНЫЙ АЛГОРИТМ: с уменьшенными шансами особых комнат и гарантированным боссом в конце
+        // ГИБРИДНЫЙ АЛГОРИТМ: с магазином
         private void GenerateHybridDungeon(DungeonGenerationConfig config)
         {
             int roomSize = config.RoomSize > 0 ? config.RoomSize : 11;
@@ -155,25 +153,34 @@ namespace ChalkAndSteel.Services
                     if (_roomGrid.ContainsKey(newPos))
                         continue;
 
-                    // ИЗМЕНЕНИЕ: Определяем тип комнаты с учетом порядка генерации
+                    // Определяем тип комнаты
                     RoomType roomType;
 
-                    // Если это последняя комната, которая будет создана - делаем ее боссом
+                    // КЛЮЧЕВОЕ ПРАВИЛО: Только последняя комната - босс
                     if (roomsGenerated == config.RoomsCount - 1)
                     {
+                        // Последняя комната всегда босс
                         roomType = RoomType.BossRoom;
-                        Debug.Log($"Последняя комната (#{roomsGenerated + 1}) - БОСС в позиции {newPos}");
-                    }
-                    // Если это предпоследняя комната - можно сделать сокровищницей
-                    else if (roomsGenerated == config.RoomsCount - 2)
-                    {
-                        roomType = RoomType.TreasureRoom;
-                        Debug.Log($"Предпоследняя комната (#{roomsGenerated + 1}) - СОКРОВИЩНИЦА в позиции {newPos}");
+                        Debug.Log($"🔥 ПОСЛЕДНЯЯ КОМНАТА (#{roomsGenerated + 1}) - БОСС в позиции {newPos}");
                     }
                     else
                     {
-                        // Для остальных комнат используем обычную логику с уменьшенными шансами
-                        roomType = DetermineRoomTypeWithReducedChances(config, roomsGenerated);
+                        // Все остальные комнаты определяются случайно
+                        roomType = DetermineRandomRoomTypeWithShop(config, roomsGenerated);
+
+                        // Отладочные сообщения для особых комнат
+                        switch (roomType)
+                        {
+                            case RoomType.TreasureRoom:
+                                Debug.Log($"💰 СОКРОВИЩНИЦА в позиции {newPos} (комната #{roomsGenerated + 1})");
+                                break;
+                            case RoomType.SpecialRoom:
+                                Debug.Log($"✨ ОСОБАЯ КОМНАТА в позиции {newPos} (комната #{roomsGenerated + 1})");
+                                break;
+                            case RoomType.ShopRoom:
+                                Debug.Log($"🏪 МАГАЗИН в позиции {newPos} (комната #{roomsGenerated + 1})");
+                                break;
+                        }
                     }
 
                     var oppositeDirection = _doorHelper.GetOppositeDirection(direction);
@@ -220,50 +227,46 @@ namespace ChalkAndSteel.Services
             DebugDungeonStructure();
         }
 
-        // НОВЫЙ МЕТОД: Определение типа комнаты с уменьшенными шансами
-        private RoomType DetermineRoomTypeWithReducedChances(DungeonGenerationConfig config, int roomIndex)
+        // НОВЫЙ МЕТОД: Определение типа комнаты с магазином
+        private RoomType DetermineRandomRoomTypeWithShop(DungeonGenerationConfig config, int roomIndex)
         {
-            // Стартовая комната уже создана, roomIndex начинается с 1
+            // Не допускаем босса в середине подземелья
             float randomValue = UnityEngine.Random.value;
 
-            // Уменьшенные шансы (можно настроить в конфиге)
-            float bossChance = config.BossRoomChance * 0.1f;         // Уменьшаем шанс босса в 10 раз
-            float treasureChance = config.TreasureRoomChance * 0.2f; // Уменьшаем шанс сокровищницы в 5 раз
-            float specialChance = config.SpecialRoomChance * 0.3f;   // Уменьшаем шанс особой комнаты в 3 раза
+            // Накопительные шансы (без босса)
+            float treasureChance = config.TreasureRoomChance;
+            float specialChance = config.SpecialRoomChance;
+            float shopChance = config.ShopRoomChance;  // Шанс магазина
 
-            // Накопительные проверки
-            if (randomValue < bossChance)
+            // Сумма всех шансов (без босса)
+            float totalChance = treasureChance + specialChance + shopChance;
+
+            // Если сумма больше 1, нормализуем шансы
+            if (totalChance > 1.0f)
             {
-                return RoomType.BossRoom;
+                treasureChance /= totalChance;
+                specialChance /= totalChance;
+                shopChance /= totalChance;
             }
-            else if (randomValue < bossChance + treasureChance)
+
+            // Определяем тип комнаты по диапазонам
+            if (randomValue < treasureChance)
             {
                 return RoomType.TreasureRoom;
             }
-            else if (randomValue < bossChance + treasureChance + specialChance)
+            else if (randomValue < treasureChance + specialChance)
             {
                 return RoomType.SpecialRoom;
             }
+            else if (randomValue < treasureChance + specialChance + shopChance)
+            {
+                return RoomType.ShopRoom;
+            }
             else
             {
+                // Оставшаяся вероятность - обычная комната
                 return RoomType.NormalRoom;
             }
-        }
-
-        // Оригинальный метод оставляем для совместимости
-        private RoomType DetermineRoomType(DungeonGenerationConfig config, int roomIndex)
-        {
-            if (roomIndex == 0) return RoomType.StartRoom;
-            if (roomIndex == config.RoomsCount - 1) return RoomType.BossRoom;
-            if (roomIndex == config.RoomsCount - 2) return RoomType.TreasureRoom;
-
-            float randomValue = UnityEngine.Random.value;
-
-            if (randomValue < config.BossRoomChance) return RoomType.BossRoom;
-            if (randomValue < config.BossRoomChance + config.TreasureRoomChance) return RoomType.TreasureRoom;
-            if (randomValue < config.BossRoomChance + config.TreasureRoomChance + config.SpecialRoomChance) return RoomType.SpecialRoom;
-
-            return RoomType.NormalRoom;
         }
 
         private List<DoorDirections> GetFreeDirections(Vector3Int position, int roomSize)
@@ -356,28 +359,45 @@ namespace ChalkAndSteel.Services
             int bossCount = 0;
             int treasureCount = 0;
             int specialCount = 0;
+            int shopCount = 0;      // НОВЫЙ СЧЕТЧИК
             int normalCount = 0;
+            int roomNumber = 0;
 
             foreach (var room in _generatedRooms)
             {
+                roomNumber++;
                 string doors = "";
                 if (_doorHelper.HasDoor(room.Doors, DoorDirections.North)) doors += "↑";
                 if (_doorHelper.HasDoor(room.Doors, DoorDirections.East)) doors += "→";
                 if (_doorHelper.HasDoor(room.Doors, DoorDirections.South)) doors += "↓";
                 if (_doorHelper.HasDoor(room.Doors, DoorDirections.West)) doors += "←";
 
-                Debug.Log($"{room.GridPosition}: {room.RoomType} [{doors}]");
+                string roomInfo = $"{room.GridPosition}: {room.RoomType} [{doors}]";
+
+                // Подсвечиваем особые комнаты
+                if (room.RoomType == RoomType.BossRoom && roomNumber == _generatedRooms.Count)
+                    Debug.Log($"🔥 {roomInfo} (ПОСЛЕДНЯЯ КОМНАТА)");
+                else if (room.RoomType == RoomType.ShopRoom)
+                    Debug.Log($"🏪 {roomInfo}");
+                else if (room.RoomType == RoomType.TreasureRoom)
+                    Debug.Log($"💰 {roomInfo}");
+                else if (room.RoomType == RoomType.SpecialRoom)
+                    Debug.Log($"✨ {roomInfo}");
+                else
+                    Debug.Log(roomInfo);
 
                 switch (room.RoomType)
                 {
                     case RoomType.BossRoom: bossCount++; break;
                     case RoomType.TreasureRoom: treasureCount++; break;
                     case RoomType.SpecialRoom: specialCount++; break;
+                    case RoomType.ShopRoom: shopCount++; break;  // НОВЫЙ СЧЕТЧИК
                     case RoomType.NormalRoom: normalCount++; break;
                 }
             }
 
-            Debug.Log($"ИТОГО: Боссов: {bossCount}, Сокровищниц: {treasureCount}, Особых: {specialCount}, Обычных: {normalCount}");
+            Debug.Log($"ИТОГО: Боссов: {bossCount}, Сокровищниц: {treasureCount}, " +
+                     $"Особых: {specialCount}, Магазинов: {shopCount}, Обычных: {normalCount}");
             Debug.Log("==========================");
         }
 

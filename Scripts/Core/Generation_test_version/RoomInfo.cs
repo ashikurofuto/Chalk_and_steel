@@ -17,6 +17,14 @@ namespace ChalkAndSteel.Services
         [SerializeField] private Vector3Int _gridPosition = Vector3Int.zero;
         [SerializeField] private DoorDirections _doors = DoorDirections.None;
 
+        [Header("Visual Settings")]
+        [SerializeField] private Color _startRoomColor = Color.green;
+        [SerializeField] private Color _bossRoomColor = Color.red;
+        [SerializeField] private Color _treasureRoomColor = Color.yellow;
+        [SerializeField] private Color _specialRoomColor = Color.magenta;
+        [SerializeField] private Color _shopRoomColor = new Color(0.5f, 0.3f, 0.1f); // ÊÎÐÈ×ÍÅÂÛÉ äëÿ ìàãàçèíà
+        [SerializeField] private Color _normalRoomColor = Color.white;
+
         [Header("Debug")]
         [SerializeField] private bool _showDebugInfo = true;
         [SerializeField] private bool _drawGizmos = true;
@@ -69,17 +77,32 @@ namespace ChalkAndSteel.Services
 
         private void UpdateWallsForDoors()
         {
-            // Óáåäèìñÿ ÷òî âñå ñòåíû íàéäåíû
             if (_wallLeft == null) _wallLeft = FindWall("Left");
             if (_wallRight == null) _wallRight = FindWall("Right");
             if (_wallTop == null) _wallTop = FindWall("Top");
             if (_wallBottom == null) _wallBottom = FindWall("Bottom");
 
-            // Îòêëþ÷àåì ñòåíû òàì, ãäå åñòü äâåðè
             if (_wallLeft != null) _wallLeft.SetActive(!_doorHelper.HasDoor(_doors, DoorDirections.West));
             if (_wallRight != null) _wallRight.SetActive(!_doorHelper.HasDoor(_doors, DoorDirections.East));
             if (_wallTop != null) _wallTop.SetActive(!_doorHelper.HasDoor(_doors, DoorDirections.North));
             if (_wallBottom != null) _wallBottom.SetActive(!_doorHelper.HasDoor(_doors, DoorDirections.South));
+        }
+
+        private void UpdateRoomColor()
+        {
+            if (_mainRenderer == null) return;
+
+            Color color = _roomType switch
+            {
+                RoomType.StartRoom => _startRoomColor,
+                RoomType.BossRoom => _bossRoomColor,
+                RoomType.TreasureRoom => _treasureRoomColor,
+                RoomType.SpecialRoom => _specialRoomColor,
+                RoomType.ShopRoom => _shopRoomColor,  // ÍÎÂÛÉ ÖÂÅÒ ÄËß ÌÀÃÀÇÈÍÀ
+                _ => _normalRoomColor
+            };
+
+            _mainRenderer.color = color;
         }
 
         private GameObject FindWall(string wallName)
@@ -92,33 +115,6 @@ namespace ChalkAndSteel.Services
                 }
             }
             return null;
-        }
-
-        private void UpdateRoomColor()
-        {
-            if (_mainRenderer == null) return;
-
-            Color color = Color.white;
-            switch (_roomType)
-            {
-                case RoomType.StartRoom:
-                    color = Color.green;
-                    break;
-                case RoomType.BossRoom:
-                    color = Color.red;
-                    break;
-                case RoomType.TreasureRoom:
-                    color = Color.yellow;
-                    break;
-                case RoomType.SpecialRoom:
-                    color = Color.magenta;
-                    break;
-                case RoomType.NormalRoom:
-                    color = Color.white;
-                    break;
-            }
-
-            _mainRenderer.color = color;
         }
 
 #if UNITY_EDITOR
