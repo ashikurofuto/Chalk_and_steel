@@ -1,38 +1,37 @@
+// Managers/InputService.cs (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 using Architecture.GlobalModules;
 using Architecture.Services;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public sealed class InputService : IInputService
 {
-    // 1. Зависимости - приватные поля readonly
     private readonly IEventBus _eventBus;
     private readonly IInputActionsWrapper _inputWrapper;
 
-    // 2. Внутреннее состояние
     private Vector2 _cachedMoveDirection;
     private bool _isEnabled;
 
-    // 3. Конструктор для инъекции зависимостей
+    // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+    private Vector2 _lastMoveInput;
+    private bool _moveKeyWasPressed;
+
     public InputService(
         IEventBus eventBus,
         IInputActionsWrapper inputWrapper)
     {
-        // Валидация входных данных
-
         _eventBus = eventBus;
         _inputWrapper = inputWrapper;
 
-        // 4. Подписка на события ввода
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         _inputWrapper.OnMoveChanged += OnMoveChanged;
         _inputWrapper.OnInteract += OnInteract;
         _inputWrapper.OnInventory += OnInventory;
         _inputWrapper.OnPause += OnPause;
 
-        // Включаем ввод по умолчанию
         Enable();
     }
 
-    // 5. Публичные методы интерфейса
     public void Enable()
     {
         if (_isEnabled) return;
@@ -57,13 +56,51 @@ public sealed class InputService : IInputService
 
     public bool IsPausePressed() => _inputWrapper.Pause;
 
-    // 6. Приватные методы-обработчики событий ввода
+    public bool IsUndoPressed()
+    {
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Ctrl+Z пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ Input System
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return false;
+
+        return (keyboard.ctrlKey.isPressed || keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed) 
+               && keyboard.zKey.wasPressedThisFrame;
+    }
+
+    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    public bool TryGetDiscreteMove(out Vector2 direction)
+    {
+        direction = Vector2.zero;
+
+        Vector2 currentInput = _cachedMoveDirection;
+        bool isPressed = currentInput.magnitude > 0.1f;
+
+        if (isPressed && !_moveKeyWasPressed)
+        {
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            direction = currentInput;
+            _moveKeyWasPressed = true;
+            return true;
+        }
+
+        if (!isPressed)
+        {
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            _moveKeyWasPressed = false;
+        }
+
+        return false;
+    }
+
     private void OnMoveChanged(Vector2 direction)
     {
         _cachedMoveDirection = direction;
-
-        // Публикация события через EventBus
         _eventBus.Publish(new MoveInputEvent(direction));
+
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+        if (TryGetDiscreteMove(out Vector2 discreteDirection))
+        {
+            //_eventBus.Publish(new DiscreteMoveInputEvent(discreteDirection));
+        }
     }
 
     private void OnInteract()
@@ -81,7 +118,6 @@ public sealed class InputService : IInputService
         _eventBus.Publish(new PauseInputEvent());
     }
 
-    // 7. Очистка ресурсов
     public void Dispose()
     {
         Disable();

@@ -9,7 +9,7 @@ public class AppLifeTimeScope : LifetimeScope
 {
     protected override void Configure(IContainerBuilder builder)
     {
-        // 1. Регистрация глобальных сервисов
+        // 1. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         builder.Register<EventBus>(Lifetime.Singleton)
             .As<IEventBus>();
         builder.Register<UnityInputActionsWrapper>(Lifetime.Singleton)
@@ -17,7 +17,7 @@ public class AppLifeTimeScope : LifetimeScope
         builder.Register<InputService>(Lifetime.Singleton)
             .As<IInputService>();
 
-        // 2. Регистрация всех состояний как отдельных сервисов
+        // 2. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         builder.Register<MainMenuState>(Lifetime.Singleton);
         builder.Register<HubState>(Lifetime.Singleton);
         builder.Register<GameplayState>(Lifetime.Singleton);
@@ -25,14 +25,14 @@ public class AppLifeTimeScope : LifetimeScope
         builder.Register<GameOverState>(Lifetime.Singleton);
         builder.Register<LoadingState>(Lifetime.Singleton);
 
-        // 3. Регистрация машины состояний
+        // 3. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         builder.Register<GameStateMachine>(Lifetime.Singleton)
             .As<IGameStateMachine>();
 
         builder.Register<PlayerService>(Lifetime.Singleton)
             .As<IPlayerService>();
 
-        // Исправленная регистрация DungeonConfigService (Вариант 2)
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ DungeonConfigService (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2)
    
 
     }
