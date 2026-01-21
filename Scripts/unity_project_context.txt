@@ -1,0 +1,3911 @@
+================================================================================
+КОНТЕКСТ UNITY ПРОЕКТА: Scripts
+Сгенерировано: 2026-01-21 14:49:37
+Всего файлов: 98
+Общий размер: 0.3 MB
+================================================================================
+
+📊 СТАТИСТИКА ПРОЕКТА:
+----------------------------------------
+  .cs      C# Script              44 файлов
+  .json    JSON Data               1 файлов
+  .meta    Unknown                52 файлов
+  .txt     Text File               1 файлов
+
+🔄 ИЗМЕНЕНИЯ С ПОСЛЕДНЕЙ СБОРКИ:
+  Новых файлов: 3
+  Измененных файлов: 2
+  Неизмененных файлов: 93
+
+================================================================================
+📁 СОДЕРЖАНИЕ ФАЙЛОВ:
+================================================================================
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\TestContext.cs
+📏 Размер: 64 байт
+📅 Изменен: 2026-01-21T14:49:07
+🔧 Тип: C# Script
+============================================================
+
+public class TestContext {
+    private string context;
+    
+}
+
+──────────────────────────────────────── (конец файла: Core\Generation_test_version\TestContext.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\PlayerStage.cs
+📏 Размер: 73 байт
+📅 Изменен: 2026-01-19T18:55:13
+🔧 Тип: C# Script
+============================================================
+
+public enum PlayerStage
+{
+    KID = 1,
+    TEEN = 2,
+    ADULT = 3
+}
+
+──────────────────────────────────────── (конец файла: Managers\PlayerStage.cs)
+
+============================================================
+📄 ФАЙЛ: Events\InventoryOpenedEvent.cs
+📏 Размер: 103 байт
+📅 Изменен: 2026-01-17T20:40:14
+🔧 Тип: C# Script
+============================================================
+
+
+/// <summary>
+///   .
+/// </summary>
+public record InventoryOpenedEvent;
+
+──────────────────────────────────────── (конец файла: Events\InventoryOpenedEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\GamePauseRequestedEvent.cs
+📏 Размер: 106 байт
+📅 Изменен: 2026-01-17T20:40:18
+🔧 Тип: C# Script
+============================================================
+
+
+/// <summary>
+///    .
+/// </summary>
+public record GamePauseRequestedEvent;
+
+──────────────────────────────────────── (конец файла: Events\GamePauseRequestedEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\PauseInputEvent.cs
+📏 Размер: 159 байт
+📅 Изменен: 2026-01-17T20:28:33
+🔧 Тип: C# Script
+============================================================
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    .
+    /// </summary>
+    public record PauseInputEvent;
+}
+
+
+
+
+──────────────────────────────────────── (конец файла: Events\PauseInputEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\InventoryInputEvent.cs
+📏 Размер: 167 байт
+📅 Изменен: 2026-01-17T20:28:28
+🔧 Тип: C# Script
+============================================================
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    .
+    /// </summary>
+    public record InventoryInputEvent;
+}
+
+
+
+
+──────────────────────────────────────── (конец файла: Events\InventoryInputEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\InteractInputEvent.cs
+📏 Размер: 171 байт
+📅 Изменен: 2026-01-17T20:28:20
+🔧 Тип: C# Script
+============================================================
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    .
+    /// </summary>
+    public record InteractInputEvent;
+}
+
+
+
+
+──────────────────────────────────────── (конец файла: Events\InteractInputEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Containers\EmptySceneScope.cs
+📏 Размер: 212 байт
+📅 Изменен: 2026-01-19T18:03:15
+🔧 Тип: C# Script
+============================================================
+
+using VContainer;
+using VContainer.Unity;
+
+public class EmptySceneScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        base.Configure(builder);
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\Containers\EmptySceneScope.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Containers\MainMenuSceneScope.cs
+📏 Размер: 214 байт
+📅 Изменен: 2026-01-17T11:03:49
+🔧 Тип: C# Script
+============================================================
+
+using VContainer;
+using VContainer.Unity;
+
+public class MainMenuSceneScope : LifetimeScope 
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        base.Configure(builder);
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\Containers\MainMenuSceneScope.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\PlayerService.cs
+📏 Размер: 219 байт
+📅 Изменен: 2026-01-19T15:12:03
+🔧 Тип: C# Script
+============================================================
+
+using ChalkAndSteel.Services;
+
+public class PlayerService : IPlayerService
+{
+    public PlayerStage GetCurrentStage() => PlayerStage.KID;
+    public int GetDeathCount() => 0;
+    public int GetKillCount() => 0;
+}
+
+──────────────────────────────────────── (конец файла: Managers\PlayerService.cs)
+
+============================================================
+📄 ФАЙЛ: Events\HubInteractionEvent.cs
+📏 Размер: 225 байт
+📅 Изменен: 2026-01-17T20:40:08
+🔧 Тип: C# Script
+============================================================
+
+using UnityEngine;
+
+public record HubInteractionEvent
+{
+    public Vector3Int InteractionPosition { get; }
+
+    public HubInteractionEvent(Vector3Int position)
+    {
+        InteractionPosition = position;
+    }
+}
+
+──────────────────────────────────────── (конец файла: Events\HubInteractionEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Containers\GameplaySceneScope.cs
+📏 Размер: 250 байт
+📅 Изменен: 2026-01-21T00:50:55
+🔧 Тип: C# Script
+============================================================
+
+// Containers/GameplaySceneScope.cs
+using VContainer;
+using VContainer.Unity;
+
+public class GameplaySceneScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        base.Configure(builder);
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\Containers\GameplaySceneScope.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\StateType.cs
+📏 Размер: 267 байт
+📅 Изменен: 2026-01-16T16:52:11
+🔧 Тип: C# Script
+============================================================
+
+namespace Core.StateMachine
+{
+    /// <summary>
+    ///   .
+    /// </summary>
+    public enum StateType
+    {
+        None = 0,
+        MainMenu,
+        Hub,
+        Gameplay,
+        Pause,
+        GameOver,
+        Loading,
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\StateType.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\IPlayerService.cs
+📏 Размер: 299 байт
+📅 Изменен: 2026-01-19T18:55:15
+🔧 Тип: C# Script
+============================================================
+
+
+
+// Services/IPlayerService.cs
+namespace ChalkAndSteel.Services
+{
+    /// <summary>
+    ///   .
+    /// </summary>
+    public interface IPlayerService
+    {
+        PlayerStage GetCurrentStage();
+        int GetDeathCount();
+        int GetKillCount();
+    }
+}
+
+──────────────────────────────────────── (конец файла: Managers\IPlayerService.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Containers\HubLifetimeScope.cs
+📏 Размер: 363 байт
+📅 Изменен: 2026-01-19T11:31:33
+🔧 Тип: C# Script
+============================================================
+
+using Architecture.GlobalModules;
+using VContainer;
+using VContainer.Unity;
+
+public class HubLifetimeScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        //   
+        builder.Register<MovementService>(Lifetime.Scoped)
+            .As<IMovementService>();
+    }
+
+   
+}
+
+──────────────────────────────────────── (конец файла: Core\Containers\HubLifetimeScope.cs)
+
+============================================================
+📄 ФАЙЛ: Events\MoveInputEvent.cs
+📏 Размер: 400 байт
+📅 Изменен: 2026-01-17T20:28:59
+🔧 Тип: C# Script
+============================================================
+
+using UnityEngine;
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    .
+    ///     .
+    /// </summary>
+    public record MoveInputEvent
+    {
+        public Vector2 Direction { get; }
+
+        public MoveInputEvent(Vector2 direction)
+        {
+            Direction = direction;
+        }
+    }
+}
+
+
+
+
+──────────────────────────────────────── (конец файла: Events\MoveInputEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\IMovementService.cs
+📏 Размер: 410 байт
+📅 Изменен: 2026-01-19T11:31:33
+🔧 Тип: C# Script
+============================================================
+
+using UnityEngine;
+using UnityEngine.Tilemaps;
+/// <summary>
+///     .
+/// </summary>
+public interface IMovementService
+    {
+        void Initialize(Tilemap groundTilemap, Tilemap borderTilemap, Vector3Int startPosition);
+        bool CanMoveTo(Vector3Int targetPosition);
+        void MoveTo(Vector3Int targetPosition);
+        Vector3Int GetCurrentPosition();
+}
+
+──────────────────────────────────────── (конец файла: Managers\IMovementService.cs)
+
+============================================================
+📄 ФАЙЛ: Handlers\BoostrapHandler.cs
+📏 Размер: 432 байт
+📅 Изменен: 2026-01-19T14:57:31
+🔧 Тип: C# Script
+============================================================
+
+using Architecture.GlobalModules;
+using UnityEngine;
+using VContainer;
+
+
+
+//BOOSTRAP SCENE 
+public class BoostrapHandler : MonoBehaviour
+{
+    private IGameStateMachine gameStateMachine;
+
+    [Inject]
+    public void Construct(IGameStateMachine gameStateMachine)
+    {
+        this.gameStateMachine = gameStateMachine;
+    }
+
+    private void Start()
+    {
+        gameStateMachine.StartMenuState();
+    }
+
+}
+
+──────────────────────────────────────── (конец файла: Handlers\BoostrapHandler.cs)
+
+============================================================
+📄 ФАЙЛ: Events\GameStateChangedEvent.cs
+📏 Размер: 456 байт
+📅 Изменен: 2026-01-17T20:40:18
+🔧 Тип: C# Script
+============================================================
+
+using Core.StateMachine;
+
+/// <summary>
+///    .
+///       .
+/// </summary>
+public record GameStateChangedEvent
+{
+    public StateType PreviousState { get; }
+    public StateType NewState { get; }
+
+    public GameStateChangedEvent(StateType previousState, StateType newState)
+    {
+        PreviousState = previousState;
+        NewState = newState;
+    }
+}
+
+──────────────────────────────────────── (конец файла: Events\GameStateChangedEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\PlayerMovedEvent.cs
+📏 Размер: 530 байт
+📅 Изменен: 2026-01-17T17:23:56
+🔧 Тип: C# Script
+============================================================
+
+﻿using UnityEngine;
+
+/// Событие перемещения игрока в хабе.
+/// Публикуется при успешном перемещении на соседнюю клетку.
+/// </summary>
+public record PlayerMovedEvent
+{
+    public Vector3Int PreviousPosition { get; }
+    public Vector3Int NewPosition { get; }
+
+    public PlayerMovedEvent(Vector3Int previousPosition, Vector3Int newPosition)
+    {
+        PreviousPosition = previousPosition;
+        NewPosition = newPosition;
+    }
+}
+
+──────────────────────────────────────── (конец файла: Events\PlayerMovedEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\HubState.cs
+📏 Размер: 581 байт
+📅 Изменен: 2026-01-17T10:58:32
+🔧 Тип: C# Script
+============================================================
+
+﻿using UnityEngine.SceneManagement;
+
+namespace Core.StateMachine
+{
+    /// <summary>
+    /// Состояние игрового хаба (карта или база).
+    /// </summary>
+    public class HubState : BaseState
+    {
+        public HubState() : base(StateType.Hub)
+        {
+        }
+
+        public override void Enter()
+        {
+            SceneManager.LoadScene(2);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            // Будущая логика: выгрузить хаб
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\States\HubState.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\MainMenuState.cs
+📏 Размер: 607 байт
+📅 Изменен: 2026-01-17T10:18:02
+🔧 Тип: C# Script
+============================================================
+
+﻿using System;
+using UnityEngine.SceneManagement;
+
+namespace Core.StateMachine
+{
+    /// <summary>
+    /// Состояние главного меню игры.
+    /// </summary>
+    public class MainMenuState : BaseState
+    {
+        public MainMenuState() : base(StateType.MainMenu)
+        {
+        }
+
+        public override void Enter()
+        {
+            SceneManager.LoadScene(1);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            // Будущая логика: скрыть UI главного меню
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\States\MainMenuState.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\PauseState.cs
+📏 Размер: 637 байт
+📅 Изменен: 2026-01-16T17:46:11
+🔧 Тип: C# Script
+============================================================
+
+﻿namespace Core.StateMachine
+{
+    /// <summary>
+    /// Состояние паузы.
+    /// </summary>
+    public class PauseState : BaseState
+    {
+        public PauseState() : base(StateType.Pause)
+        {
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            // Будущая логика: остановить время, показать UI паузы
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            // Будущая логика: возобновить время, скрыть UI паузы
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\States\PauseState.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\GameplayState.cs
+📏 Размер: 664 байт
+📅 Изменен: 2026-01-19T18:54:17
+🔧 Тип: C# Script
+============================================================
+
+﻿// Core/GameStateMachine/States/GameplayState.cs
+using Architecture.GlobalModules;
+using ChalkAndSteel.Services;
+
+namespace Core.StateMachine
+{
+    /// <summary>
+    /// Основное игровое состояние.
+    /// </summary>
+    public class GameplayState : BaseState
+    {
+        private readonly IEventBus _eventBus;
+
+
+        public GameplayState(
+            IEventBus eventBus,
+            IPlayerService playerService) : base(StateType.Gameplay)
+        {
+            _eventBus = eventBus;
+
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+        
+        }
+
+     
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\States\GameplayState.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\GameOverState.cs
+📏 Размер: 684 байт
+📅 Изменен: 2026-01-16T17:46:17
+🔧 Тип: C# Script
+============================================================
+
+﻿namespace Core.StateMachine
+{
+    /// <summary>
+    /// Состояние экрана завершения игры (смерть/проигрыш).
+    /// </summary>
+    public class GameOverState : BaseState
+    {
+        public GameOverState() : base(StateType.GameOver)
+        {
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            // Будущая логика: показать экран смерти, статистику
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            // Будущая логика: скрыть экран смерти
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\States\GameOverState.cs)
+
+============================================================
+📄 ФАЙЛ: Handlers\MainMenuHandler.cs
+📏 Размер: 699 байт
+📅 Изменен: 2026-01-17T11:05:44
+🔧 Тип: C# Script
+============================================================
+
+using Architecture.GlobalModules;
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+using VContainer;
+
+public class MainMenuHandler : MonoBehaviour
+{
+    [SerializeField] private Button StartGameBtn;
+    [SerializeField] private Button SettingsBtn;
+    [SerializeField] private Button ExitBtn;
+
+    private IGameStateMachine gameStateMachine;
+
+    [Inject]
+    public void Construct(IGameStateMachine gameStateMachine)
+    {
+        this.gameStateMachine = gameStateMachine;
+    }
+
+    private void Start()
+    {
+        StartGameBtn.onClick.AddListener(StartGameHub);
+    }
+
+    private void StartGameHub()
+    {
+        gameStateMachine.StartHubState();
+    }
+}
+
+──────────────────────────────────────── (конец файла: Handlers\MainMenuHandler.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomEntity.cs
+📏 Размер: 779 байт
+📅 Изменен: 2026-01-21T03:03:29
+🔧 Тип: C# Script
+============================================================
+
+[{'name="size': 'Размеры комнаты.</param>\n        public RoomEntity(int id', 'name="node': 'Узел дерева.</param>\n        public void Initialize(RoomView view', 'name="position': 'Новая позиция.</param>\n        public void SetPosition(Vector3 position)\n        {\n            WorldPosition = position;\n            \n            // Обновляем позицию во всех компонентах\n            if (View != null)\n                View.SetPosition(position);\n                \n            if (Node != null)\n                Node.WorldPosition = position;'}, {'name="other': 'Другая комната.</param>\n        /// <returns>True', 'RoomEntity[Id={Id}, Type={RoomType}, Pos={WorldPosition}, Size={Size}]': ''}]
+
+──────────────────────────────────────── (конец файла: Core\Generation_test_version\RoomEntity.cs)
+
+============================================================
+📄 ФАЙЛ: Core\EventBus\IEventBus.cs
+📏 Размер: 814 байт
+📅 Изменен: 2026-01-16T16:33:15
+🔧 Тип: C# Script
+============================================================
+
+using System;
+
+namespace Architecture.GlobalModules
+{
+    /// <summary>
+    ///        .
+    ///   Publisher-Subscriber    .
+    /// </summary>
+    public interface IEventBus
+    {
+        /// <summary>
+        ///    
+        /// </summary>
+        void Publish<TEvent>(TEvent @event) where TEvent : class;
+
+        /// <summary>
+        ///      
+        /// </summary>
+        void Subscribe<TEvent>(Action<TEvent> handler) where TEvent : class;
+
+        /// <summary>
+        ///   
+        /// </summary>
+        void Unsubscribe<TEvent>(Action<TEvent> handler) where TEvent : class;
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\EventBus\IEventBus.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\LoadingState.cs
+📏 Размер: 839 байт
+📅 Изменен: 2026-01-16T17:46:30
+🔧 Тип: C# Script
+============================================================
+
+﻿namespace Core.StateMachine
+{
+    /// <summary>
+    /// Состояние загрузки (переход между сценами).
+    /// </summary>
+    public class LoadingState : BaseState
+    {
+        public LoadingState() : base(StateType.Loading)
+        {
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            // Будущая логика: показать экран загрузки
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            // Будущая логика: асинхронная загрузка сцены
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            // Будущая логика: скрыть экран загрузки
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\States\LoadingState.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\IInputActionsWrapper.cs
+📏 Размер: 1,179 байт
+📅 Изменен: 2026-01-17T20:30:43
+🔧 Тип: C# Script
+============================================================
+
+using System;
+using UnityEngine;
+
+public interface IInputActionsWrapper : IDisposable
+{
+    /// <summary>
+    ///    ().
+    /// </summary>
+    Vector2 Move { get; }
+
+    /// <summary>
+    ///   .
+    /// </summary>
+    bool Interact { get; }
+
+    /// <summary>
+    ///   .
+    /// </summary>
+    bool Inventory { get; }
+
+    /// <summary>
+    ///   .
+    /// </summary>
+    bool Pause { get; }
+
+    /// <summary>
+    ///   .
+    /// </summary>
+    event Action<Vector2> OnMoveChanged;
+
+    /// <summary>
+    ///    .
+    /// </summary>
+    event Action OnInteract;
+
+    /// <summary>
+    ///    .
+    /// </summary>
+    event Action OnInventory;
+
+    /// <summary>
+    ///    .
+    /// </summary>
+    event Action OnPause;
+
+    /// <summary>
+    ///   .
+    /// </summary>
+    void Enable();
+
+    /// <summary>
+    ///   .
+    /// </summary>
+    void Disable();
+}
+
+──────────────────────────────────────── (конец файла: Managers\IInputActionsWrapper.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\BaseState.cs
+📏 Размер: 1,302 байт
+📅 Изменен: 2026-01-16T16:52:11
+🔧 Тип: C# Script
+============================================================
+
+using System;
+
+namespace Core.StateMachine
+{
+    /// <summary>
+    ///       .
+    ///         .
+    /// </summary>
+    public abstract class BaseState
+    {
+        /// <summary>
+        ///   .
+        /// </summary>
+        public readonly StateType StateID;
+
+        /// <summary>
+        ///   .
+        /// </summary>
+        /// <param name="stateID"> </param>
+        protected BaseState(StateType stateID)
+        {
+            StateID = stateID;
+        }
+
+        /// <summary>
+        ///     .
+        /// </summary>
+        public virtual void Enter()
+        {
+            //   
+        }
+
+        /// <summary>
+        ///       .
+        /// </summary>
+        public virtual void Update()
+        {
+            //   
+        }
+
+        /// <summary>
+        ///     .
+        /// </summary>
+        public virtual void Exit()
+        {
+            //   
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\BaseState.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\IGameStateMachine.cs
+📏 Размер: 1,610 байт
+📅 Изменен: 2026-01-16T18:07:25
+🔧 Тип: C# Script
+============================================================
+
+﻿using Core.StateMachine;
+
+namespace Architecture.GlobalModules
+{
+    /// <summary>
+    /// Интерфейс машины состояний игры.
+    /// Предоставляет методы для управления состояниями.
+    /// Каждый метод соответствует конкретному состоянию для явного контроля.
+    /// </summary>
+    public interface IGameStateMachine
+    {
+        /// <summary>
+        /// Возвращает текущее активное состояние
+        /// </summary>
+        BaseState GetCurrentState();
+
+        /// <summary>
+        /// Переключает на состояние главного меню
+        /// </summary>
+        void StartMenuState();
+
+        /// <summary>
+        /// Переключает на состояние хаба
+        /// </summary>
+        void StartHubState();
+
+        /// <summary>
+        /// Переключает на состояние геймплея
+        /// </summary>
+        void StartGameplayState();
+
+        /// <summary>
+        /// Переключает на состояние паузы
+        /// </summary>
+        void StartPauseState();
+
+        /// <summary>
+        /// Переключает на состояние экрана смерти
+        /// </summary>
+        void StartGameOverState();
+
+        /// <summary>
+        /// Переключает на состояние загрузки
+        /// </summary>
+        void StartLoadingState();
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\IGameStateMachine.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\MovementService.cs
+📏 Размер: 1,637 байт
+📅 Изменен: 2026-01-19T11:31:33
+🔧 Тип: C# Script
+============================================================
+
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+namespace Architecture.GlobalModules
+{
+    /// <summary>
+    ///     .
+    ///       .
+    /// </summary>
+    public sealed class MovementService : IMovementService
+
+
+    {
+        private Tilemap _groundTilemap;
+        private Tilemap _borderTilemap;
+        private Vector3Int _currentPosition;
+
+        public void Initialize(Tilemap groundTilemap, Tilemap borderTilemap, Vector3Int startPosition)
+        {
+            _groundTilemap = groundTilemap;
+            _borderTilemap = borderTilemap;
+            _currentPosition = startPosition;
+        }
+
+        /// <summary>
+        ///      .
+        /// </summary>
+        public bool CanMoveTo(Vector3Int targetPosition)
+        {
+            //      
+            bool hasGround = _groundTilemap.HasTile(targetPosition);
+
+            //      
+            bool hasBorder = _borderTilemap.HasTile(targetPosition);
+
+            return hasGround && !hasBorder;
+        }
+
+        /// <summary>
+        ///     .
+        /// </summary>
+        public void MoveTo(Vector3Int targetPosition)
+        {
+            _currentPosition = targetPosition;
+        }
+
+        /// <summary>
+        ///       .
+        /// </summary>
+        public Vector3Int GetCurrentPosition() => _currentPosition;
+    }
+}
+
+──────────────────────────────────────── (конец файла: Managers\MovementService.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Containers\AppLifeTimeScope.cs
+📏 Размер: 1,657 байт
+📅 Изменен: 2026-01-21T00:50:49
+🔧 Тип: C# Script
+============================================================
+
+using Architecture.GlobalModules;
+using Architecture.Services;
+using ChalkAndSteel.Services;
+using Core.StateMachine;
+using VContainer;
+using VContainer.Unity;
+
+public class AppLifeTimeScope : LifetimeScope
+{
+    protected override void Configure(IContainerBuilder builder)
+    {
+        // 1. ����������� ���������� ��������
+        builder.Register<EventBus>(Lifetime.Singleton)
+            .As<IEventBus>();
+        builder.Register<UnityInputActionsWrapper>(Lifetime.Singleton)
+            .As<IInputActionsWrapper>();
+        builder.Register<InputService>(Lifetime.Singleton)
+            .As<IInputService>();
+
+        // 2. ����������� ���� ��������� ��� ��������� ��������
+        builder.Register<MainMenuState>(Lifetime.Singleton);
+        builder.Register<HubState>(Lifetime.Singleton);
+        builder.Register<GameplayState>(Lifetime.Singleton);
+        builder.Register<PauseState>(Lifetime.Singleton);
+        builder.Register<GameOverState>(Lifetime.Singleton);
+        builder.Register<LoadingState>(Lifetime.Singleton);
+
+        // 3. ����������� ������ ���������
+        builder.Register<GameStateMachine>(Lifetime.Singleton)
+            .As<IGameStateMachine>();
+
+        builder.Register<PlayerService>(Lifetime.Singleton)
+            .As<IPlayerService>();
+
+        // ������������ ����������� DungeonConfigService (������� 2)
+   
+
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\Containers\AppLifeTimeScope.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\IInputService.cs
+📏 Размер: 1,821 байт
+📅 Изменен: 2026-01-20T22:46:41
+🔧 Тип: C# Script
+============================================================
+
+using System;
+using UnityEngine;
+/// <summary>
+/// ��������� ������� �����.
+/// ������������� ������ � �������� ����� � ���������� �������� �����.
+/// </summary>
+public interface IInputService
+{
+    /// <summary>
+    /// �������� ������� �����.
+    /// </summary>
+    void Enable();
+
+    /// <summary>
+    /// ��������� ������� �����.
+    /// </summary>
+    void Disable();
+
+    /// <summary>
+    /// ���������� ������� ��������������� ������ ��������.
+    /// </summary>
+    Vector2 GetMoveDirection();
+
+    /// <summary>
+    /// ���������, ���� �� ������ ������ �������������� � ������� �����.
+    /// </summary>
+    bool IsInteractPressed();
+
+    /// <summary>
+    /// ���������, ���� �� ������ ������ ��������� � ������� �����.
+    /// </summary>
+    bool IsInventoryPressed();
+
+    /// <summary>
+    /// ���������, ���� �� ������ ������ ����� � ������� �����.
+    /// </summary>
+    bool IsPausePressed();
+
+    /// <summary>
+    /// ���������, ���� �� ������ ������ ��������� (Ctrl+Z) � ������� �����.
+    /// </summary>
+    bool IsUndoPressed();
+}
+
+──────────────────────────────────────── (конец файла: Managers\IInputService.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\UnityInputActionsWrapper.cs
+📏 Размер: 2,787 байт
+📅 Изменен: 2026-01-17T20:31:28
+🔧 Тип: C# Script
+============================================================
+
+using System;
+using UnityEngine;
+
+
+
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    Unity Input System.
+    ///    InputSystem_Actions.
+    /// </summary>
+    public sealed class UnityInputActionsWrapper : IInputActionsWrapper
+    {
+        private readonly InputSystem_Actions _inputActions;
+        private Vector2 _moveVector;
+        private bool _interactPressed;
+        private bool _inventoryPressed;
+        private bool _pausePressed;
+
+        public Vector2 Move => _moveVector;
+        public bool Interact => _interactPressed;
+        public bool Inventory => _inventoryPressed;
+        public bool Pause => _pausePressed;
+
+        public event Action<Vector2> OnMoveChanged;
+        public event Action OnInteract;
+        public event Action OnInventory;
+        public event Action OnPause;
+
+        public UnityInputActionsWrapper()
+        {
+            _inputActions = new InputSystem_Actions();
+            SetupCallbacks();
+        }
+
+        private void SetupCallbacks()
+        {
+            //  
+            _inputActions.Player.Move.performed += context =>
+            {
+                _moveVector = context.ReadValue<Vector2>();
+                OnMoveChanged?.Invoke(_moveVector);
+            };
+            _inputActions.Player.Move.canceled += _ =>
+            {
+                _moveVector = Vector2.zero;
+                OnMoveChanged?.Invoke(_moveVector);
+            };
+
+            //  
+            _inputActions.Player.Interact.started += _ =>
+            {
+                _interactPressed = true;
+                OnInteract?.Invoke();
+            };
+            _inputActions.Player.Interact.canceled += _ => _interactPressed = false;
+
+            //  
+            _inputActions.Player.Inventory.started += _ =>
+            {
+                _inventoryPressed = true;
+                OnInventory?.Invoke();
+            };
+            _inputActions.Player.Inventory.canceled += _ => _inventoryPressed = false;
+
+            //  
+            _inputActions.Player.Pause.started += _ =>
+            {
+                _pausePressed = true;
+                OnPause?.Invoke();
+            };
+            _inputActions.Player.Pause.canceled += _ => _pausePressed = false;
+        }
+
+        public void Enable()
+        {
+            _inputActions.Player.Enable();
+            _inputActions.UI.Enable();
+        }
+
+        public void Disable()
+        {
+            _inputActions.Player.Disable();
+            _inputActions.UI.Disable();
+        }
+
+        public void Dispose()
+        {
+            _inputActions?.Dispose();
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Managers\UnityInputActionsWrapper.cs)
+
+============================================================
+📄 ФАЙЛ: Managers\InputService.cs
+📏 Размер: 3,885 байт
+📅 Изменен: 2026-01-20T22:46:42
+🔧 Тип: C# Script
+============================================================
+
+// Managers/InputService.cs (����������)
+using Architecture.GlobalModules;
+using Architecture.Services;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public sealed class InputService : IInputService
+{
+    private readonly IEventBus _eventBus;
+    private readonly IInputActionsWrapper _inputWrapper;
+
+    private Vector2 _cachedMoveDirection;
+    private bool _isEnabled;
+
+    // ��� ����������� �����
+    private Vector2 _lastMoveInput;
+    private bool _moveKeyWasPressed;
+
+    public InputService(
+        IEventBus eventBus,
+        IInputActionsWrapper inputWrapper)
+    {
+        _eventBus = eventBus;
+        _inputWrapper = inputWrapper;
+
+        // �������� �� ������� �����
+        _inputWrapper.OnMoveChanged += OnMoveChanged;
+        _inputWrapper.OnInteract += OnInteract;
+        _inputWrapper.OnInventory += OnInventory;
+        _inputWrapper.OnPause += OnPause;
+
+        Enable();
+    }
+
+    public void Enable()
+    {
+        if (_isEnabled) return;
+
+        _inputWrapper.Enable();
+        _isEnabled = true;
+    }
+
+    public void Disable()
+    {
+        if (!_isEnabled) return;
+
+        _inputWrapper.Disable();
+        _isEnabled = false;
+    }
+
+    public Vector2 GetMoveDirection() => _cachedMoveDirection;
+
+    public bool IsInteractPressed() => _inputWrapper.Interact;
+
+    public bool IsInventoryPressed() => _inputWrapper.Inventory;
+
+    public bool IsPausePressed() => _inputWrapper.Pause;
+
+    public bool IsUndoPressed()
+    {
+        // ��������� ���������� Ctrl+Z ����� ����� Input System
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return false;
+
+        return (keyboard.ctrlKey.isPressed || keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed) 
+               && keyboard.zKey.wasPressedThisFrame;
+    }
+
+    // ����� �����: ���������, ���� �� ����� ������� �����������
+    public bool TryGetDiscreteMove(out Vector2 direction)
+    {
+        direction = Vector2.zero;
+
+        Vector2 currentInput = _cachedMoveDirection;
+        bool isPressed = currentInput.magnitude > 0.1f;
+
+        if (isPressed && !_moveKeyWasPressed)
+        {
+            // ������ ������� �������
+            direction = currentInput;
+            _moveKeyWasPressed = true;
+            return true;
+        }
+
+        if (!isPressed)
+        {
+            // ������� ��������
+            _moveKeyWasPressed = false;
+        }
+
+        return false;
+    }
+
+    private void OnMoveChanged(Vector2 direction)
+    {
+        _cachedMoveDirection = direction;
+        _eventBus.Publish(new MoveInputEvent(direction));
+
+        // ���������� �������� (������ ��� �������)
+        if (TryGetDiscreteMove(out Vector2 discreteDirection))
+        {
+            //_eventBus.Publish(new DiscreteMoveInputEvent(discreteDirection));
+        }
+    }
+
+    private void OnInteract()
+    {
+        _eventBus.Publish(new InteractInputEvent());
+    }
+
+    private void OnInventory()
+    {
+        _eventBus.Publish(new InventoryInputEvent());
+    }
+
+    private void OnPause()
+    {
+        _eventBus.Publish(new PauseInputEvent());
+    }
+
+    public void Dispose()
+    {
+        Disable();
+        _inputWrapper.OnMoveChanged -= OnMoveChanged;
+        _inputWrapper.OnInteract -= OnInteract;
+        _inputWrapper.OnInventory -= OnInventory;
+        _inputWrapper.OnPause -= OnPause;
+        _inputWrapper.Dispose();
+    }
+}
+
+──────────────────────────────────────── (конец файла: Managers\InputService.cs)
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\GameStateMachine.cs
+📏 Размер: 5,046 байт
+📅 Изменен: 2026-01-17T11:08:57
+🔧 Тип: C# Script
+============================================================
+
+﻿using System;
+using System.Collections.Generic;
+using Core.StateMachine;
+using UnityEngine;
+
+namespace Architecture.GlobalModules
+{
+
+    /// <summary>
+    /// Глобальный модуль уровня 1 для управления состояниями игры.
+    /// Реализует конечный автомат с публикацией событий о смене состояний.
+    /// Изолирован от Unity API для тестируемости.
+    /// </summary>
+    public sealed class GameStateMachine : IGameStateMachine
+    {
+        private readonly IEventBus _eventBus;
+        private readonly Dictionary<StateType, BaseState> _states;
+        private BaseState _currentState;
+
+        /// <summary>
+        /// Конструктор машины состояний.
+        /// Инициализирует все возможные состояния игры.
+        /// </summary>
+        public GameStateMachine(
+            IEventBus eventBus,
+            MainMenuState mainMenuState,
+            HubState hubState,
+            GameplayState gameplayState,
+            PauseState pauseState,
+            GameOverState gameOverState,
+            LoadingState loadingState)
+        {
+            _eventBus = eventBus;
+
+            // Инициализация всех состояний
+            _states = new Dictionary<StateType, BaseState>
+            {
+                { StateType.MainMenu, mainMenuState },
+                { StateType.Hub, hubState },
+                { StateType.Gameplay, gameplayState },
+                { StateType.Pause, pauseState },
+                { StateType.GameOver, gameOverState },
+                { StateType.Loading, loadingState }
+            };
+        }
+
+        /// <summary>
+        /// Переключает на состояние указанного типа.
+        /// Вызывает Exit у текущего состояния и Enter у нового.
+        /// Публикует GameStateChangedEvent через EventBus.
+        /// </summary>
+        /// <param name="stateType">Тип состояния для переключения</param>
+        /// <exception cref="KeyNotFoundException">Если состояние не найдено</exception>
+        private void ChangeState(StateType stateType)
+        {
+            if (!_states.TryGetValue(stateType, out var newState))
+            {
+                throw new KeyNotFoundException($"State with type {stateType} not found");
+            }
+
+            if (_currentState != null && _currentState.StateID == stateType)
+            {
+                // Уже в этом состоянии, ничего не делаем
+                return;
+            }
+
+            var previousStateType = _currentState?.StateID ?? StateType.None;
+
+            _currentState?.Exit();
+            _currentState = newState;
+            _currentState.Enter();
+            Debug.Log($"prev state: {previousStateType}, now is state: {_currentState}");
+            _eventBus.Publish(new GameStateChangedEvent(previousStateType, stateType));
+        }
+
+        /// <summary>
+        /// Возвращает текущее активное состояние.
+        /// Если состояние не установлено, возвращает null.
+        /// </summary>
+        public BaseState GetCurrentState() => _currentState;
+
+        /// <summary>
+        /// Возвращает тип текущего активного состояния.
+        /// Если состояние не установлено, возвращает StateType.None.
+        /// </summary>
+        public StateType GetCurrentStateType() => _currentState?.StateID ?? StateType.None;
+
+        /// <summary>
+        /// Переключает на состояние главного меню
+        /// </summary>
+        public void StartMenuState() => ChangeState(StateType.MainMenu);
+
+        /// <summary>
+        /// Переключает на состояние хаба
+        /// </summary>
+        public void StartHubState() => ChangeState(StateType.Hub);
+
+        /// <summary>
+        /// Переключает на состояние геймплея
+        /// </summary>
+        public void StartGameplayState() => ChangeState(StateType.Gameplay);
+
+        /// <summary>
+        /// Переключает на состояние паузы
+        /// </summary>
+        public void StartPauseState() => ChangeState(StateType.Pause);
+
+        /// <summary>
+        /// Переключает на состояние экрана смерти
+        /// </summary>
+        public void StartGameOverState() => ChangeState(StateType.GameOver);
+
+        /// <summary>
+        /// Переключает на состояние загрузки
+        /// </summary>
+        public void StartLoadingState() => ChangeState(StateType.Loading);
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\GameStateMachine\GameStateMachine.cs)
+
+============================================================
+📄 ФАЙЛ: Core\EventBus\EventBus.cs
+📏 Размер: 6,234 байт
+📅 Изменен: 2026-01-16T16:37:43
+🔧 Тип: C# Script
+============================================================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Architecture.GlobalModules
+{
+
+    /// <summary>
+    ///    1    .
+    ///   Unity API  .
+    /// </summary>
+    public sealed class EventBus : IEventBus
+    {
+        private readonly Dictionary<Type, List<Delegate>> _subscribers;
+        private readonly object _lockObject = new object();
+
+        public EventBus()
+        {
+            _subscribers = new Dictionary<Type, List<Delegate>>();
+        }
+
+        /// <summary>
+        ///     .
+        ///     .
+        /// </summary>
+        /// <typeparam name="TEvent">  (  )</typeparam>
+        /// <param name="event">   </param>
+        /// <exception cref="ArgumentNullException">  null</exception>
+        public void Publish<TEvent>(TEvent @event) where TEvent : class
+        {
+            if (@event == null)
+                throw new ArgumentNullException(nameof(@event), "Event cannot be null");
+
+            Type eventType = typeof(TEvent);
+            List<Delegate> handlers;
+
+            lock (_lockObject)
+            {
+                if (!_subscribers.TryGetValue(eventType, out handlers) || handlers.Count == 0)
+                    return;
+
+                //      
+                handlers = new List<Delegate>(handlers);
+            }
+
+            //        deadlock
+            foreach (var handler in handlers.OfType<Action<TEvent>>())
+            {
+                try
+                {
+                    handler(@event);
+                }
+                catch (Exception ex)
+                {
+                    //  ,      
+                    //  Unity  Debug.LogError,     Unity API
+                    //     ILogger
+                    Console.WriteLine($"Error in event handler for {eventType.Name}: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        ///      .
+        ///        .
+        /// </summary>
+        /// <typeparam name="TEvent">  (  )</typeparam>
+        /// <param name="handler"> </param>
+        /// <exception cref="ArgumentNullException">  null</exception>
+        public void Subscribe<TEvent>(Action<TEvent> handler) where TEvent : class
+        {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler), "Handler cannot be null");
+
+            Type eventType = typeof(TEvent);
+
+            lock (_lockObject)
+            {
+                if (!_subscribers.TryGetValue(eventType, out var handlers))
+                {
+                    handlers = new List<Delegate>();
+                    _subscribers[eventType] = handlers;
+                }
+
+                // ,      
+                if (!handlers.Contains(handler))
+                {
+                    handlers.Add(handler);
+                }
+                else
+                {
+                    Console.WriteLine($"Handler already subscribed for {eventType.Name}");
+                }
+            }
+        }
+
+        /// <summary>
+        ///         .
+        /// </summary>
+        /// <typeparam name="TEvent">  (  )</typeparam>
+        /// <param name="handler">  </param>
+        /// <exception cref="ArgumentNullException">  null</exception>
+        public void Unsubscribe<TEvent>(Action<TEvent> handler) where TEvent : class
+        {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler), "Handler cannot be null");
+
+            Type eventType = typeof(TEvent);
+
+            lock (_lockObject)
+            {
+                if (_subscribers.TryGetValue(eventType, out var handlers))
+                {
+                    handlers.Remove(handler);
+
+                    //  ,    
+                    if (handlers.Count == 0)
+                    {
+                        _subscribers.Remove(eventType);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        ///       .
+        ///    .
+        /// </summary>
+        /// <typeparam name="TEvent">   </typeparam>
+        public void ClearSubscriptions<TEvent>() where TEvent : class
+        {
+            Type eventType = typeof(TEvent);
+
+            lock (_lockObject)
+            {
+                _subscribers.Remove(eventType);
+            }
+        }
+
+        /// <summary>
+        ///       .
+        ///     .
+        /// </summary>
+        public int GetSubscriberCount<TEvent>() where TEvent : class
+        {
+            Type eventType = typeof(TEvent);
+
+            lock (_lockObject)
+            {
+                return _subscribers.TryGetValue(eventType, out var handlers) ? handlers.Count : 0;
+            }
+        }
+
+        /// <summary>
+        /// ,       .
+        ///      .
+        /// </summary>
+        public bool HasSubscribers<TEvent>() where TEvent : class
+        {
+            Type eventType = typeof(TEvent);
+
+            lock (_lockObject)
+            {
+                return _subscribers.TryGetValue(eventType, out var handlers) && handlers.Count > 0;
+            }
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\EventBus\EventBus.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomNode.cs
+📏 Размер: 7,225 байт
+📅 Изменен: 2026-01-21T14:45:23
+🔧 Тип: C# Script
+============================================================
+
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Core.Generation
+{
+    /// <summary>
+    /// Узел бинарного дерева для представления комнаты в структуре генерации подземелья.
+    /// Каждый узел содержит данные о комнате и ссылки на левого и правого потомков.
+    /// </summary>
+    public class RoomNode
+    {
+        /// <summary>
+        /// Данные комнаты, связанные с этим узлом.
+        /// </summary>
+        public RoomData RoomData { get; private set; }
+
+        /// <summary>
+        /// Левый дочерний узел (может быть null).
+        /// </summary>
+        public RoomNode Left { get; set; }
+
+        /// <summary>
+        /// Правый дочерний узел (может быть null).
+        /// </summary>
+        public RoomNode Right { get; set; }
+
+        /// <summary>
+        /// Родительский узел (может быть null для корня).
+        /// </summary>
+        public RoomNode Parent { get; set; }
+
+        /// <summary>
+        /// Глубина узла в дереве (0 для корня).
+        /// </summary>
+        public int Depth { get; private set; }
+
+        /// <summary>
+        /// Позиция комнаты в мировых координатах.
+        /// </summary>
+        public Vector3 WorldPosition { get; set; }
+
+        /// <summary>
+        /// Уникальный идентификатор узла.
+        /// </summary>
+        public int Id { get; private set; }
+
+        /// <summary>
+        /// Создать новый узел комнаты.
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор.</param>
+        /// <param name="roomData">Данные комнаты.</param>
+        /// <param name="depth">Глубина узла.</param>
+        public RoomNode(int id, RoomData roomData, int depth = 0)
+        {
+            Id = id;
+            RoomData = roomData;
+            Depth = depth;
+            Left = null;
+            Right = null;
+            Parent = null;
+            WorldPosition = Vector3.zero;
+        }
+
+        /// <summary>
+        /// Проверка, является ли узел листом (нет потомков).
+        /// </summary>
+        public bool IsLeaf => Left == null && Right == null;
+
+        /// <summary>
+        /// Проверка, является ли узел полным (имеет обоих потомков).
+        /// </summary>
+        public bool IsFull => Left != null && Right != null;
+
+        /// <summary>
+        /// Добавить левого потомка.
+        /// </summary>
+        /// <param name="child">Дочерний узел.</param>
+        public void AddLeftChild(RoomNode child)
+        {
+            Left = child;
+            if (child != null)
+            {
+                child.Parent = this;
+                child.Depth = Depth + 1;
+            }
+        }
+
+        /// <summary>
+        /// Добавить правого потомка.
+        /// </summary>
+        /// <param name="child">Дочерний узел.</param>
+        public void AddRightChild(RoomNode child)
+        {
+            Right = child;
+            if (child != null)
+            {
+                child.Parent = this;
+                child.Depth = Depth + 1;
+            }
+        }
+
+        /// <summary>
+        /// Получить список всех потомков данного узла (рекурсивно).
+        /// </summary>
+        /// <returns>Список всех потомков.</returns>
+        public List<RoomNode> GetAllChildren()
+        {
+            var children = new List<RoomNode>();
+            if (Left != null)
+            {
+                children.Add(Left);
+                children.AddRange(Left.GetAllChildren());
+            }
+            if (Right != null)
+            {
+                children.Add(Right);
+                children.AddRange(Right.GetAllChildren());
+            }
+            return children;
+        }
+
+        /// <summary>
+        /// Получить количество потомков (рекурсивно).
+        /// </summary>
+        /// <returns>Количество потомков.</returns>
+        public int GetChildrenCount()
+        {
+            int count = 0;
+            if (Left != null)
+                count += 1 + Left.GetChildrenCount();
+            if (Right != null)
+                count += 1 + Right.GetChildrenCount();
+            return count;
+        }
+
+        /// <summary>
+        /// Найти узел по идентификатору в поддереве.
+        /// </summary>
+        /// <param name="id">Идентификатор для поиска.</param>
+        /// <returns>Найденный узел или null.</returns>
+        public RoomNode FindNodeById(int id)
+        {
+            if (Id == id)
+                return this;
+
+            RoomNode found = null;
+            if (Left != null)
+                found = Left.FindNodeById(id);
+            if (found == null && Right != null)
+                found = Right.FindNodeById(id);
+            return found;
+        }
+
+        /// <summary>
+        /// Вычислить bounding box, содержащий все комнаты в поддереве.
+        /// </summary>
+        /// <returns>Bounding box в мировых координатах.</returns>
+        public Bounds CalculateSubtreeBounds()
+        {
+            var bounds = new Bounds(WorldPosition, RoomData.Size);
+            var children = GetAllChildren();
+            foreach (var child in children)
+            {
+                bounds.Encapsulate(new Bounds(child.WorldPosition, child.RoomData.Size));
+            }
+            return bounds;
+        }
+
+        /// <summary>
+        /// Получить строковое представление узла для отладки.
+        /// </summary>
+        /// <returns>Строка с информацией об узле.</returns>
+        public override string ToString()
+        {
+            return $"RoomNode[Id={Id}, Type={RoomData.RoomType}, Pos={WorldPosition}, Depth={Depth}, Leaf={IsLeaf}]";
+        }
+    }
+
+    /// <summary>
+    /// Данные комнаты, используемые в узле дерева.
+    /// </summary>
+    public class RoomData
+    {
+        public int Id { get; set; }
+        public RoomType RoomType { get; set; }
+        public Vector3 Size { get; set; }
+        public int Difficulty { get; set; }
+        public List<int> ConnectedRoomIds { get; set; }
+
+        public RoomData(int id, RoomType roomType, Vector3 size)
+        {
+            Id = id;
+            RoomType = roomType;
+            Size = size;
+            Difficulty = 1;
+            ConnectedRoomIds = new List<int>();
+        }
+    }
+}
+
+
+
+
+
+──────────────────────────────────────── (конец файла: Core\Generation_test_version\RoomNode.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomModel.cs
+📏 Размер: 8,520 байт
+📅 Изменен: 2026-01-21T14:48:27
+🔧 Тип: C# Script
+============================================================
+
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+namespace Core.Generation
+{
+    /// <summary>
+    /// Модель комнаты, анализирующая Tilemap для определения размеров, центра и соседей.
+    /// Работает в 2D пространстве.
+    /// </summary>
+    public class RoomModel
+    {
+        /// <summary>
+        /// Уникальный идентификатор комнаты.
+        /// </summary>
+        public int Id { get; private set; }
+
+        /// <summary>
+        /// Тип комнаты.
+        /// </summary>
+        public RoomType RoomType { get; private set; }
+
+        /// <summary>
+        /// Tilemap пола комнаты.
+        /// </summary>
+        public Tilemap FloorTilemap { get; private set; }
+
+        /// <summary>
+        /// Tilemap стен комнаты.
+        /// </summary>
+        public Tilemap WallsTilemap { get; private set; }
+
+        /// <summary>
+        /// Размер комнаты в мировых единицах (ширина, высота).
+        /// </summary>
+        public Vector2 Size { get; private set; }
+
+        /// <summary>
+        /// Центр комнаты в мировых координатах.
+        /// </summary>
+        public Vector2 Center { get; private set; }
+
+        /// <summary>
+        /// Границы комнаты в мировых координатах.
+        /// </summary>
+        public Bounds Bounds { get; private set; }
+
+        /// <summary>
+        /// Список соседних комнат по сторонам (максимум 2).
+        /// Ключ - сторона, значение - ID соседней комнаты.
+        /// </summary>
+        public Dictionary<RoomSide, int> Neighbors { get; private set; }
+
+        /// <summary>
+        /// Создать модель комнаты на основе Tilemap.
+        /// </summary>
+        /// <param name="id">ID комнаты.</param>
+        /// <param name="roomType">Тип комнаты.</param>
+        /// <param name="floorTilemap">Tilemap пола (обязательно).</param>
+        /// <param name="wallsTilemap">Tilemap стен (может быть null).</param>
+        public RoomModel(int id, RoomType roomType, Tilemap floorTilemap, Tilemap wallsTilemap = null)
+        {
+            Id = id;
+            RoomType = roomType;
+            FloorTilemap = floorTilemap;
+            WallsTilemap = wallsTilemap;
+            Neighbors = new Dictionary<RoomSide, int>();
+
+            CalculateRoomDimensions();
+        }
+
+        /// <summary>
+        /// Вычислить размеры комнаты на основе заполненных тайлов в Tilemap пола.
+        /// </summary>
+        private void CalculateRoomDimensions()
+        {
+            if (FloorTilemap == null)
+            {
+                Debug.LogError($"RoomModel {Id}: FloorTilemap is null, cannot calculate dimensions.");
+                Size = Vector2.zero;
+                Center = Vector2.zero;
+                Bounds = new Bounds(Vector3.zero, Vector3.zero);
+                return;
+            }
+
+            // Получить все заполненные клетки
+            var bounds = FloorTilemap.cellBounds;
+            if (bounds.size.x == 0 || bounds.size.y == 0)
+            {
+                // Если нет тайлов, используем размер по умолчанию
+                Size = Vector2.one;
+                Center = FloorTilemap.transform.position;
+                Bounds = new Bounds(Center, Vector3.one);
+                return;
+            }
+
+            // Мировые позиции углов
+            Vector3 minWorld = FloorTilemap.CellToWorld(new Vector3Int(bounds.xMin, bounds.yMin, 0));
+            Vector3 maxWorld = FloorTilemap.CellToWorld(new Vector3Int(bounds.xMax - 1, bounds.yMax - 1, 0));
+
+            // Учитываем размер тайла (предполагаем квадратные тайлы)
+            Vector3 tileSize = FloorTilemap.cellSize;
+            float width = (maxWorld.x - minWorld.x) + tileSize.x;
+            float height = (maxWorld.y - minWorld.y) + tileSize.y;
+
+            Size = new Vector2(width, height);
+            Center = new Vector2((minWorld.x + maxWorld.x) / 2f, (minWorld.y + maxWorld.y) / 2f);
+            Bounds = new Bounds(Center, new Vector3(width, height, 0f));
+        }
+
+        /// <summary>
+        /// Добавить соседа с указанной стороны.
+        /// Проверяет, что соседей не больше 2.
+        /// </summary>
+        /// <param name="side">Сторона, с которой соседствует комната.</param>
+        /// <param name="neighborId">ID соседней комнаты.</param>
+        /// <returns>True, если сосед успешно добавлен, false если достигнут лимит.</returns>
+        public bool AddNeighbor(RoomSide side, int neighborId)
+        {
+            if (Neighbors.Count >= 2)
+            {
+                Debug.LogWarning($"Room {Id}: Cannot add more than 2 neighbors.");
+                return false;
+            }
+
+            if (Neighbors.ContainsKey(side))
+            {
+                Debug.LogWarning($"Room {Id}: Already has neighbor on side {side}.");
+                return false;
+            }
+
+            Neighbors[side] = neighborId;
+            return true;
+        }
+
+        /// <summary>
+        /// Удалить соседа с указанной стороны.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>True, если сосед удалён.</returns>
+        public bool RemoveNeighbor(RoomSide side)
+        {
+            return Neighbors.Remove(side);
+        }
+
+        /// <summary>
+        /// Получить ID соседа с указанной стороны.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>ID соседа или -1, если соседа нет.</returns>
+        public int GetNeighborId(RoomSide side)
+        {
+            return Neighbors.TryGetValue(side, out int id) ? id : -1;
+        }
+
+        /// <summary>
+        /// Проверить, есть ли сосед с указанной стороны.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>True, если есть сосед.</returns>
+        public bool HasNeighbor(RoomSide side)
+        {
+            return Neighbors.ContainsKey(side);
+        }
+
+        /// <summary>
+        /// Получить позицию входа/выхода на указанной стороне комнаты (центр стороны).
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>Мировая позиция центра стороны.</returns>
+        public Vector2 GetSideCenter(RoomSide side)
+        {
+            float halfWidth = Size.x / 2f;
+            float halfHeight = Size.y / 2f;
+
+            return side switch
+            {
+                RoomSide.North => Center + new Vector2(0, halfHeight),
+                RoomSide.South => Center + new Vector2(0, -halfHeight),
+                RoomSide.East => Center + new Vector2(halfWidth, 0),
+                RoomSide.West => Center + new Vector2(-halfWidth, 0),
+                _ => Center
+            };
+        }
+
+        /// <summary>
+        /// Получить строковое представление для отладки.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"RoomModel[Id={Id}, Type={RoomType}, Size={Size}, Center={Center}, Neighbors={Neighbors.Count}]";
+        }
+    }
+
+    /// <summary>
+    /// Стороны комнаты для указания соседей.
+    /// </summary>
+    public enum RoomSide
+    {
+        North,  // верх (положительный Y)
+        South,  // низ (отрицательный Y)
+        East,   // право (положительный X)
+        West    // лево (отрицательный X)
+    }
+}
+
+
+──────────────────────────────────────── (конец файла: Core\Generation_test_version\RoomModel.cs)
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomView.cs
+📏 Размер: 9,053 байт
+📅 Изменен: 2026-01-21T01:26:43
+🔧 Тип: C# Script
+============================================================
+
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+namespace Core.Generation
+{
+    /// <summary>
+    /// Визуальное представление комнаты для 2D проекта.
+    /// Содержит ссылки на Tilemap пола и стен, а также на 2D компоненты.
+    /// </summary>
+    public class RoomView : MonoBehaviour
+    {
+        [Header("Tilemaps")]
+        [SerializeField] private Tilemap _floorTilemap;
+        [SerializeField] private Tilemap _wallsTilemap;
+        
+        [Header("2D Components")]
+        [SerializeField] private Collider2D _roomCollider2D;
+        [SerializeField] private SpriteRenderer _roomSpriteRenderer;
+        
+        /// <summary>
+        /// Tilemap пола комнаты.
+        /// </summary>
+        public Tilemap FloorTilemap => _floorTilemap;
+
+        /// <summary>
+        /// Tilemap стен комнаты (может быть null).
+        /// </summary>
+        public Tilemap WallsTilemap => _wallsTilemap;
+
+        /// <summary>
+        /// Коллайдер2D комнаты для физических взаимодействий в 2D.
+        /// </summary>
+        public Collider2D RoomCollider2D => _roomCollider2D;
+
+        /// <summary>
+        /// Спрайт-рендерер комнаты для визуализации в 2D.
+        /// </summary>
+        public SpriteRenderer RoomSpriteRenderer => _roomSpriteRenderer;
+
+        /// <summary>
+        /// Уникальный идентификатор комнаты.
+        /// </summary>
+        public int RoomId { get; private set; }
+
+        /// <summary>
+        /// Тип комнаты (стартовая, обычная, боссовая, сокровищница и т.д.).
+        /// </summary>
+        public RoomType RoomType { get; private set; }
+
+        /// <summary>
+        /// Модель комнаты, рассчитанная на основе Tilemap.
+        /// </summary>
+        public RoomModel RoomModel { get; private set; }
+
+        /// <summary>
+        /// Инициализация комнаты с заданными параметрами.
+        /// Создаёт RoomModel на основе Tilemap.
+        /// </summary>
+        /// <param name="roomId">Уникальный идентификатор.</param>
+        /// <param name="roomType">Тип комнаты.</param>
+        public void Initialize(int roomId, RoomType roomType)
+        {
+            RoomId = roomId;
+            RoomType = roomType;
+            
+            // Создаём модель комнаты, анализирующую Tilemap
+            RoomModel = new RoomModel(roomId, roomType, _floorTilemap, _wallsTilemap);
+            
+            UpdateVisuals();
+            UpdateColliderFromModel();
+        }
+
+        /// <summary>
+        /// Обновление визуальных параметров комнаты в зависимости от её типа.
+        /// </summary>
+        private void UpdateVisuals()
+        {
+            if (_roomSpriteRenderer != null)
+            {
+                // Здесь можно менять цвет спрайта в зависимости от типа комнаты
+                // Например, _roomSpriteRenderer.color = GetColorForRoomType(RoomType);
+            }
+        }
+
+        /// <summary>
+        /// Настроить коллайдер по размерам модели комнаты (если коллайдер отсутствует).
+        /// </summary>
+        private void UpdateColliderFromModel()
+        {
+            if (_roomCollider2D != null || RoomModel == null) return;
+            
+            // Добавляем BoxCollider2D, соответствующий размерам комнаты
+            var collider = gameObject.AddComponent<BoxCollider2D>();
+            collider.size = RoomModel.Size;
+            collider.offset = RoomModel.Center - (Vector2)transform.position;
+            _roomCollider2D = collider;
+        }
+
+        /// <summary>
+        /// Активировать/деактивировать видимость комнаты.
+        /// </summary>
+        /// <param name="isActive">Флаг активности.</param>
+        public void SetActive(bool isActive)
+        {
+            gameObject.SetActive(isActive);
+        }
+
+        /// <summary>
+        /// Установить позицию комнаты в мировых координатах.
+        /// Также обновляет позицию Tilemap.
+        /// </summary>
+        /// <param name="position">Новая позиция.</param>
+        public void SetPosition(Vector3 position)
+        {
+            transform.position = position;
+            
+            // Если нужно переместить Tilemap относительно родителя, можно настроить локальную позицию
+            // В данном случае Tilemap уже является дочерним, поэтому трансформируется автоматически
+        }
+
+        /// <summary>
+        /// Установить вращение комнаты (в 2D обычно не используется, но оставим).
+        /// </summary>
+        /// <param name="rotation">Новое вращение.</param>
+        public void SetRotation(Quaternion rotation)
+        {
+            transform.rotation = rotation;
+        }
+
+        /// <summary>
+        /// Получить границы комнаты (Bounds) для проверки пересечений.
+        /// Использует модель комнаты или коллайдер.
+        /// </summary>
+        /// <returns>Границы комнаты.</returns>
+        public Bounds GetBounds()
+        {
+            if (_roomCollider2D != null)
+                return _roomCollider2D.bounds;
+            if (RoomModel != null)
+                return RoomModel.Bounds;
+            return new Bounds(transform.position, Vector3.zero);
+        }
+
+        /// <summary>
+        /// Получить размер комнаты из модели.
+        /// </summary>
+        /// <returns>Размер комнаты (ширина, высота).</returns>
+        public Vector2 GetRoomSize()
+        {
+            return RoomModel?.Size ?? Vector2.zero;
+        }
+
+        /// <summary>
+        /// Получить центр комнаты из модели.
+        /// </summary>
+        /// <returns>Центр комнаты в мировых координатах.</returns>
+        public Vector2 GetRoomCenter()
+        {
+            return RoomModel?.Center ?? (Vector2)transform.position;
+        }
+
+        /// <summary>
+        /// Добавить соседа с указанной стороны.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <param name="neighborRoomId">ID соседней комнаты.</param>
+        /// <returns>True, если сосед успешно добавлен.</returns>
+        public bool AddNeighbor(RoomSide side, int neighborRoomId)
+        {
+            return RoomModel?.AddNeighbor(side, neighborRoomId) ?? false;
+        }
+
+        /// <summary>
+        /// Получить ID соседа с указанной стороны.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>ID соседа или -1, если соседа нет.</returns>
+        public int GetNeighborId(RoomSide side)
+        {
+            return RoomModel?.GetNeighborId(side) ?? -1;
+        }
+
+        /// <summary>
+        /// Проверить, есть ли сосед с указанной стороны.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>True, если есть сосед.</returns>
+        public bool HasNeighbor(RoomSide side)
+        {
+            return RoomModel?.HasNeighbor(side) ?? false;
+        }
+
+        /// <summary>
+        /// Получить позицию входа/выхода на указанной стороне комнаты.
+        /// </summary>
+        /// <param name="side">Сторона.</param>
+        /// <returns>Мировая позиция центра стороны.</returns>
+        public Vector2 GetSideCenter(RoomSide side)
+        {
+            return RoomModel?.GetSideCenter(side) ?? (Vector2)transform.position;
+        }
+
+        /// <summary>
+        /// Получить строковое представление для отладки.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"RoomView[Id={RoomId}, Type={RoomType}, Model={RoomModel}]";
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Core\Generation_test_version\RoomView.cs)
+
+============================================================
+📄 ФАЙЛ: Handlers\GameHubHandler.cs
+📏 Размер: 9,320 байт
+📅 Изменен: 2026-01-19T11:31:33
+🔧 Тип: C# Script
+============================================================
+
+using Architecture.GlobalModules;
+using Architecture.Services;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using VContainer;
+
+namespace Game.Handlers
+{
+    /// <summary>
+    ///     .
+    ///         .
+    /// </summary>
+    public class GameHubHandler : MonoBehaviour
+    {
+        // ===  () ===
+        private IEventBus _eventBus;
+        private IMovementService _movementService;
+        private IInputService _inputService;
+
+        // ===    (  ) ===
+        [SerializeField] private Tilemap _groundTilemap;
+        [SerializeField] private Tilemap _borderTilemap;
+        [SerializeField] private Transform _playerTransform;
+        [SerializeField] private float _moveSpeed = 5f;
+        [SerializeField] private float _inputCooldown = 0.3f;
+
+        // ===   ===
+        private Vector3Int _targetGridPosition;
+        private Vector3 _targetWorldPosition;
+        private bool _isMoving;
+        private Vector3Int _startPosition = Vector3Int.zero;
+        private Vector2 _lastInputDirection = Vector2.zero;
+        private float _lastInputTime;
+        private bool _isInputEnabled = true;
+
+        //        
+        private bool _interactProcessed = false;
+        private bool _inventoryProcessed = false;
+        private bool _pauseProcessed = false;
+
+        // ===  ===
+        [Inject]
+        private void Construct(
+            IEventBus eventBus,
+            IMovementService movementService,
+            IInputService inputService)
+        {
+            _eventBus = eventBus;
+            _movementService = movementService;
+            _inputService = inputService;
+        }
+
+        // ===  ===
+        private void Awake()
+        {
+            _movementService.Initialize(_groundTilemap, _borderTilemap, GetGridPositionFromWorld(_playerTransform.position));
+            ValidateSceneReferences();
+            InitializePlayerPosition();
+
+            //     EventBus
+            _eventBus.Subscribe<MoveInputEvent>(OnMoveInput);
+        }
+
+        private void OnEnable()
+        {
+            _inputService.Enable();
+            _isInputEnabled = true;
+        }
+
+        private void OnDisable()
+        {
+            _inputService.Disable();
+            _eventBus.Unsubscribe<MoveInputEvent>(OnMoveInput);
+        }
+
+        private void OnDestroy()
+        {
+            _eventBus.Unsubscribe<MoveInputEvent>(OnMoveInput);
+        }
+
+        // ===   ===
+        private void Update()
+        {
+            HandleMovementAnimation();
+
+            //        
+            CheckButtonInputs();
+        }
+
+        // ===    EVENTBUS ===
+        private void OnMoveInput(MoveInputEvent e)
+        {
+            if (!_isInputEnabled || _isMoving) return;
+
+            if (e.Direction == Vector2.zero)
+            {
+                _lastInputDirection = Vector2.zero;
+                return;
+            }
+
+            if (e.Direction == _lastInputDirection && Time.time - _lastInputTime < _inputCooldown)
+                return;
+
+            ProcessMovement(e.Direction);
+        }
+
+        // ===        ===
+        private void CheckButtonInputs()
+        {
+            if (!_isInputEnabled) return;
+
+            //   (,  E)
+            if (_inputService.IsInteractPressed())
+            {
+                if (!_interactProcessed)
+                {
+                    ProcessInteract();
+                    _interactProcessed = true;
+                }
+            }
+            else
+            {
+                _interactProcessed = false;
+            }
+
+            //   (,  Space)
+            if (_inputService.IsInventoryPressed())
+            {
+                if (!_inventoryProcessed)
+                {
+                    ProcessInventory();
+                    _inventoryProcessed = true;
+                }
+            }
+            else
+            {
+                _inventoryProcessed = false;
+            }
+
+            //   (,  Escape)
+            if (_inputService.IsPausePressed())
+            {
+                if (!_pauseProcessed)
+                {
+                    ProcessPause();
+                    _pauseProcessed = true;
+                }
+            }
+            else
+            {
+                _pauseProcessed = false;
+            }
+        }
+
+        // ===   (     ) ===
+        private void ProcessInteract()
+        {
+            Debug.Log("Interact pressed in hub");
+            _eventBus.Publish(new HubInteractionEvent(_movementService.GetCurrentPosition()));
+        }
+
+        private void ProcessInventory()
+        {
+            Debug.Log("Inventory opened in hub");
+            _eventBus.Publish(new InventoryOpenedEvent());
+        }
+
+        private void ProcessPause()
+        {
+            Debug.Log("Pause pressed in hub");
+            _eventBus.Publish(new GamePauseRequestedEvent());
+        }
+
+        // ===   ===
+        private void ProcessMovement(Vector2 inputDirection)
+        {
+            Vector3Int moveDirection = GetGridDirectionFromInput(inputDirection);
+            if (moveDirection == Vector3Int.zero) return;
+
+            Vector3Int currentPosition = _movementService.GetCurrentPosition();
+            Vector3Int targetPosition = currentPosition + moveDirection;
+
+            AttemptMove(targetPosition);
+
+            _lastInputDirection = inputDirection;
+            _lastInputTime = Time.time;
+        }
+
+        private void AttemptMove(Vector3Int targetPosition)
+        {
+            if (!_movementService.CanMoveTo(targetPosition)) return;
+
+            Vector3Int previousPosition = _movementService.GetCurrentPosition();
+
+            _movementService.MoveTo(targetPosition);
+            _targetGridPosition = targetPosition;
+            _targetWorldPosition = _groundTilemap.GetCellCenterWorld(targetPosition);
+            _isMoving = true;
+
+            _eventBus.Publish(new PlayerMovedEvent(previousPosition, targetPosition));
+            Debug.Log($"Moved from {previousPosition} to {targetPosition}");
+        }
+
+        // ===   ===
+        private void HandleMovementAnimation()
+        {
+            if (!_isMoving) return;
+
+            _playerTransform.position = Vector3.MoveTowards(
+                _playerTransform.position,
+                _targetWorldPosition,
+                _moveSpeed * Time.deltaTime
+            );
+
+            if (Vector3.Distance(_playerTransform.position, _targetWorldPosition) < 0.01f)
+            {
+                _playerTransform.position = _targetWorldPosition;
+                _isMoving = false;
+            }
+        }
+
+        // ===   ===
+        private Vector3Int GetGridDirectionFromInput(Vector2 input)
+        {
+            float deadZone = 0.2f;
+            if (input.magnitude < deadZone) return Vector3Int.zero;
+
+            if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
+            {
+                return input.x > 0 ? Vector3Int.right : Vector3Int.left;
+            }
+            else
+            {
+                return input.y > 0 ? Vector3Int.up : Vector3Int.down;
+            }
+        }
+
+        private void InitializePlayerPosition()
+        {
+            _targetGridPosition = _startPosition;
+            _targetWorldPosition = _groundTilemap.GetCellCenterWorld(_startPosition);
+            _playerTransform.position = _targetWorldPosition;
+        }
+
+        private void ValidateSceneReferences()
+        {
+            if (_groundTilemap == null)
+                throw new System.NullReferenceException($"{nameof(_groundTilemap)}    ");
+
+            if (_borderTilemap == null)
+                throw new System.NullReferenceException($"{nameof(_borderTilemap)}    ");
+
+            if (_playerTransform == null)
+                throw new System.NullReferenceException($"{nameof(_playerTransform)}    ");
+        }
+
+        private Vector3Int GetGridPositionFromWorld(Vector3 worldPosition)
+        {
+            return _groundTilemap.WorldToCell(worldPosition);
+        }
+
+        // ===     ===
+        public void EnableInput() => _isInputEnabled = true;
+        public void DisableInput() => _isInputEnabled = false;
+
+        public void TeleportToPosition(Vector3Int gridPosition)
+        {
+            _movementService.MoveTo(gridPosition);
+            _targetGridPosition = gridPosition;
+            _targetWorldPosition = _groundTilemap.GetCellCenterWorld(gridPosition);
+            _playerTransform.position = _targetWorldPosition;
+            _isMoving = false;
+        }
+    }
+}
+
+──────────────────────────────────────── (конец файла: Handlers\GameHubHandler.cs)
+
+============================================================
+📄 ФАЙЛ: Handlers\InputBase.cs
+📏 Размер: 69,788 байт
+📅 Изменен: 2026-01-17T17:00:32
+🔧 Тип: C# Script
+============================================================
+
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was auto-generated by com.unity.inputsystem:InputActionCodeGenerator
+//     version 1.16.0
+//     from Assets/InputSystem_Actions.inputactions
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
+
+/// <summary>
+/// Provides programmatic access to <see cref="InputActionAsset" />, <see cref="InputActionMap" />, <see cref="InputAction" /> and <see cref="InputControlScheme" /> instances defined in asset "Assets/InputSystem_Actions.inputactions".
+/// </summary>
+/// <remarks>
+/// This class is source generated and any manual edits will be discarded if the associated asset is reimported or modified.
+/// </remarks>
+/// <example>
+/// <code>
+/// using namespace UnityEngine;
+/// using UnityEngine.InputSystem;
+///
+/// // Example of using an InputActionMap named "Player" from a UnityEngine.MonoBehaviour implementing callback interface.
+/// public class Example : MonoBehaviour, MyActions.IPlayerActions
+/// {
+///     private MyActions_Actions m_Actions;                  // Source code representation of asset.
+///     private MyActions_Actions.PlayerActions m_Player;     // Source code representation of action map.
+///
+///     void Awake()
+///     {
+///         m_Actions = new MyActions_Actions();              // Create asset object.
+///         m_Player = m_Actions.Player;                      // Extract action map object.
+///         m_Player.AddCallbacks(this);                      // Register callback interface IPlayerActions.
+///     }
+///
+///     void OnDestroy()
+///     {
+///         m_Actions.Dispose();                              // Destroy asset object.
+///     }
+///
+///     void OnEnable()
+///     {
+///         m_Player.Enable();                                // Enable all actions within map.
+///     }
+///
+///     void OnDisable()
+///     {
+///         m_Player.Disable();                               // Disable all actions within map.
+///     }
+///
+///     #region Interface implementation of MyActions.IPlayerActions
+///
+///     // Invoked when "Move" action is either started, performed or canceled.
+///     public void OnMove(InputAction.CallbackContext context)
+///     {
+///         Debug.Log($"OnMove: {context.ReadValue&lt;Vector2&gt;()}");
+///     }
+///
+///     // Invoked when "Attack" action is either started, performed or canceled.
+///     public void OnAttack(InputAction.CallbackContext context)
+///     {
+///         Debug.Log($"OnAttack: {context.ReadValue&lt;float&gt;()}");
+///     }
+///
+///     #endregion
+/// }
+/// </code>
+/// </example>
+public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
+{
+    /// <summary>
+    /// Provides access to the underlying asset instance.
+    /// </summary>
+    public InputActionAsset asset { get; }
+
+    /// <summary>
+    /// Constructs a new instance.
+    /// </summary>
+    public @InputSystem_Actions()
+    {
+        asset = InputActionAsset.FromJson(@"{
+    ""version"": 1,
+    ""name"": ""InputSystem_Actions"",
+    ""maps"": [
+        {
+            ""name"": ""Player"",
+            ""id"": ""df70fa95-8a34-4494-b137-73ab6b9c7d37"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""351f2ccd-1f9f-44bf-9bec-d62ac5c5f408"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""852140f2-7766-474d-8707-702459ba45f3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1ba0d36-48eb-4cd5-b651-1c94a6531f70"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""2776c80d-3c14-4091-8c56-d04ced07a2b0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""978bfe49-cc26-4a3d-ab7b-7d7a29327403"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""00ca640b-d935-4593-8157-c05846ea39b3"",
+                    ""path"": ""Dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e2062cb9-1b15-46a2-838c-2f8d72a0bdd9"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""8180e8bd-4097-4f4e-ab88-4523101a6ce9"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""320bffee-a40b-4347-ac70-c210eb8bc73a"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""1c5327b5-f71c-4f60-99c7-4e737386f1d1"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""d2581a9b-1d11-4566-b27d-b92aff5fabbc"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""2e46982e-44cc-431b-9f0b-c11910bf467a"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""fcfe95b8-67b9-4526-84b5-5d0bc98d6400"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""77bff152-3580-4b21-b6de-dcd0c7e41164"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1635d3fe-58b6-4ba9-a4e2-f4b964f6b5c8"",
+                    ""path"": ""<XRController>/{Primary2DAxis}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XR"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ea4d645-4504-4529-b061-ab81934c3752"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb40bb66-4559-4dfa-9a2f-820438abb426"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daba33a1-ad0c-4742-a909-43ad1cdfbeb6"",
+                    ""path"": ""<XInputController>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1534dc16-a6aa-499d-9c3a-22b47347b52a"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""25060bbd-a3a6-476e-8fba-45ae484aad05"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c04ea5f-b012-41d1-a6f7-02e963b52893"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b3f66d0b-7751-423f-908b-a11c5bd95930"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""272f6d14-89ba-496f-b7ff-215263d3219f"",
+            ""actions"": [
+                {
+                    ""name"": ""Navigate"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""c95b2375-e6d9-4b88-9c4c-c5e76515df4b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""7607c7b6-cd76-4816-beef-bd0341cfe950"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""15cef263-9014-4fd5-94d9-4e4a6234a6ef"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""32b35790-4ed0-4e9a-aa41-69ac6d629449"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""3c7022bf-7922-4f7c-a998-c437916075ad"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""44b200b1-1557-4083-816c-b22cbdf77ddf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MiddleClick"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""dad70c86-b58c-4b17-88ad-f5e53adf419e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ScrollWheel"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""0489e84a-4833-4c40-bfae-cea84b696689"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TrackedDevicePosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""24908448-c609-4bc3-a128-ea258674378a"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TrackedDeviceOrientation"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be"",
+                    ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""809f371f-c5e2-4e7a-83a1-d867598f40dd"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""14a5d6e8-4aaf-4119-a9ef-34b8c2c548bf"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""9144cbe6-05e1-4687-a6d7-24f99d23dd81"",
+                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""2db08d65-c5fb-421b-983f-c71163608d67"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""58748904-2ea9-4a80-8579-b500e6a76df8"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""8ba04515-75aa-45de-966d-393d9bbd1c14"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""712e721c-bdfb-4b23-a86c-a0d9fcfea921"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+... [файл обрезан, всего строк: 501]
+
+──────────────────────────────────────── (конец файла: Handlers\InputBase.cs)
+
+============================================================
+📄 ФАЙЛ: context_metadata.json
+📏 Размер: 42,725 байт
+📅 Изменен: 2026-01-21T14:37:23
+🔧 Тип: JSON Data
+============================================================
+
+{
+  "project_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts",
+  "scan_date": "2026-01-21T14:37:23.396596",
+  "total_files": 95,
+  "total_size": 146608,
+  "files_by_type": {
+    ".cs": 43,
+    ".shader": 0,
+    ".cginc": 0,
+    ".hlsl": 0,
+    ".compute": 0,
+    ".asmdef": 0,
+    ".asset": 0,
+    ".unity": 0,
+    ".prefab": 0,
+    ".mat": 0,
+    ".controller": 0,
+    ".anim": 0,
+    ".ttf": 0,
+    ".png": 0,
+    ".jpg": 0,
+    ".fbx": 0,
+    ".txt": 0,
+    ".json": 0,
+    ".xml": 0,
+    ".meta": 52
+  },
+  "files": [
+    {
+      "path": "Managers\\PlayerStage.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Managers\\PlayerStage.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 73,
+      "modified": "2026-01-19T18:55:13.158661",
+      "hash": "36eb1bbfbccc891a981a20d4170f3926",
+      "is_script": true
+    },
+    {
+      "path": "Events\\InventoryOpenedEvent.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Events\\InventoryOpenedEvent.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 103,
+      "modified": "2026-01-17T20:40:14.643174",
+      "hash": "2f36ee90da81a0f24c5b6e7318a781b5",
+      "is_script": true
+    },
+    {
+      "path": "Events\\GamePauseRequestedEvent.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Events\\GamePauseRequestedEvent.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 106,
+      "modified": "2026-01-17T20:40:18.548089",
+      "hash": "57ee745ab6ae85ccc03a5262b7c4cf01",
+      "is_script": true
+    },
+    {
+      "path": "Events\\PauseInputEvent.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Events\\PauseInputEvent.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 159,
+      "modified": "2026-01-17T20:28:33.860469",
+      "hash": "5b7c3e2a4d50e06e8369c220a07f850e",
+      "is_script": true
+    },
+    {
+      "path": "Events\\InventoryInputEvent.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Events\\InventoryInputEvent.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 167,
+      "modified": "2026-01-17T20:28:28.688960",
+      "hash": "2083db864a7d953c3e5b35716f422abd",
+      "is_script": true
+    },
+    {
+      "path": "Events\\InteractInputEvent.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Events\\InteractInputEvent.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 171,
+      "modified": "2026-01-17T20:28:20.213503",
+      "hash": "07a9c4a71bfe6db4e73b46583833bf2a",
+      "is_script": true
+    },
+    {
+      "path": "Core\\Containers\\EmptySceneScope.cs",
+      "full_path": "C:\\Users\\Пользователь\\Documents\\unity-projects\\Steel_and_Chalk\\Assets\\Chalk_and_steel\\Scripts\\Core\\Containers\\EmptySceneScope.cs",
+      "extension": ".cs",
+      "type": "C# Script",
+      "size": 212,
+      "modified": "2026-01-19T18:03:15.998200",
+      "hash": "04a9c69317815163eae8935b7b67af5b",
+      "is_script": true
+    },
+    {
+      "path": "Core\\Containers\\MainMenuSceneScope.cs",
+... [файл обрезан, всего строк: 101]
+
+============================================================
+📄 ФАЙЛ: unity_project_context.txt
+📏 Размер: 130,457 байт
+📅 Изменен: 2026-01-21T14:37:23
+🔧 Тип: Text File
+============================================================
+
+================================================================================
+КОНТЕКСТ UNITY ПРОЕКТА: Scripts
+Сгенерировано: 2026-01-21 14:37:23
+Всего файлов: 95
+Общий размер: 0.1 MB
+================================================================================
+
+📊 СТАТИСТИКА ПРОЕКТА:
+----------------------------------------
+  .cs      C# Script              43 файлов
+  .meta    Unknown                52 файлов
+
+🔄 ИЗМЕНЕНИЯ С ПОСЛЕДНЕЙ СБОРКИ:
+  Новых файлов: 95
+  Измененных файлов: 0
+  Неизмененных файлов: 0
+
+================================================================================
+📁 СОДЕРЖАНИЕ ФАЙЛОВ:
+================================================================================
+
+============================================================
+📄 ФАЙЛ: Managers\PlayerStage.cs
+📏 Размер: 73 байт
+📅 Изменен: 2026-01-19T18:55:13
+🔧 Тип: C# Script
+============================================================
+
+public enum PlayerStage
+{
+    KID = 1,
+    TEEN = 2,
+    ADULT = 3
+}
+
+──────────────────────────────────────── (конец файла: Managers\PlayerStage.cs)
+
+============================================================
+📄 ФАЙЛ: Events\InventoryOpenedEvent.cs
+📏 Размер: 103 байт
+📅 Изменен: 2026-01-17T20:40:14
+🔧 Тип: C# Script
+============================================================
+
+
+/// <summary>
+///   .
+/// </summary>
+public record InventoryOpenedEvent;
+
+──────────────────────────────────────── (конец файла: Events\InventoryOpenedEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\GamePauseRequestedEvent.cs
+📏 Размер: 106 байт
+📅 Изменен: 2026-01-17T20:40:18
+🔧 Тип: C# Script
+============================================================
+
+
+/// <summary>
+///    .
+/// </summary>
+public record GamePauseRequestedEvent;
+
+──────────────────────────────────────── (конец файла: Events\GamePauseRequestedEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\PauseInputEvent.cs
+📏 Размер: 159 байт
+📅 Изменен: 2026-01-17T20:28:33
+🔧 Тип: C# Script
+============================================================
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    .
+    /// </summary>
+    public record PauseInputEvent;
+}
+
+
+
+
+──────────────────────────────────────── (конец файла: Events\PauseInputEvent.cs)
+
+============================================================
+📄 ФАЙЛ: Events\InventoryInputEvent.cs
+📏 Размер: 167 байт
+📅 Изменен: 2026-01-17T20:28:28
+🔧 Тип: C# Script
+============================================================
+
+namespace Architecture.Services
+{
+    /// <summary>
+    ///    .
+    /// </summary>
+    public record InventoryInputEvent;
+... [файл обрезан, всего строк: 101]
+
+============================================================
+📄 ФАЙЛ: Events\GamePauseRequestedEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:40:18
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 87b29cf3f23d859459fa0410a870b86b
+
+============================================================
+📄 ФАЙЛ: Events\GameStateChangedEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T18:08:22
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 4658b4cb221f93d4b860aeb63a761fa1
+
+============================================================
+📄 ФАЙЛ: Events\HubInteractionEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:40:08
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: f4368d2467baa924ea736a95272e205b
+
+============================================================
+📄 ФАЙЛ: Events\InteractInputEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:28:19
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 08b0dde0b57c48e4ea868e343e081f3e
+
+============================================================
+📄 ФАЙЛ: Events\InventoryInputEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:28:28
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: a9cc981317b2bab4c927c09a7bb5bf9d
+
+============================================================
+📄 ФАЙЛ: Events\InventoryOpenedEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:40:18
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 666382424dd67bf4eac71f4f3c4fce54
+
+============================================================
+📄 ФАЙЛ: Events\MoveInputEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:28:13
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 4a138f93be8a462449cde80740b320f5
+
+============================================================
+📄 ФАЙЛ: Events\PauseInputEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:28:33
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 0c4de9af3660b1642af1892214657210
+
+============================================================
+📄 ФАЙЛ: Events\PlayerMovedEvent.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T17:23:55
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 338d5e90a9647064fa9c8b9f733d6519
+
+============================================================
+📄 ФАЙЛ: Handlers\BoostrapHandler.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-15T18:58:47
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 5c132d1cc34b72b4f93dd572022bb277
+
+============================================================
+📄 ФАЙЛ: Handlers\GameHubHandler.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T17:29:06
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 62df4ade58b912b4083d3e0c75a1b2f7
+
+============================================================
+📄 ФАЙЛ: Handlers\InputBase.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T17:00:31
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: ab30549f5ba298940af09b7dd4591a46
+
+============================================================
+📄 ФАЙЛ: Handlers\MainMenuHandler.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T10:53:20
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 6a82d7ba540b8b04ea606049e3e7b966
+
+============================================================
+📄 ФАЙЛ: Managers\IInputActionsWrapper.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:30:43
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 4e91fe6c116079d4ebd02ca55325a200
+
+============================================================
+📄 ФАЙЛ: Managers\IInputService.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:30:05
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 6690fa96e06c1344a830ea90092b612e
+
+============================================================
+📄 ФАЙЛ: Managers\IMovementService.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T17:24:40
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: f7cc42d18a0111c47bd1da214b43e1dc
+
+============================================================
+📄 ФАЙЛ: Managers\InputService.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:32:45
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 5d4a7265c1644c24ea1e8e301a34db53
+
+============================================================
+📄 ФАЙЛ: Managers\IPlayerService.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-19T15:10:38
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 70a86726aad0a554f9967f41f91c76e1
+
+============================================================
+📄 ФАЙЛ: Managers\MovementService.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T17:25:17
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 17aee94fa83dd1e449e3a7ea29822f3b
+
+============================================================
+📄 ФАЙЛ: Managers\PlayerService.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-19T15:12:03
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 1eb0c13cdd9da4d4e916f08abd55b99d
+
+============================================================
+📄 ФАЙЛ: Managers\PlayerStage.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-19T18:55:12
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: c6739b79c829f824492b9c5a49c9817a
+
+============================================================
+📄 ФАЙЛ: Managers\UnityInputActionsWrapper.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T20:31:27
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: f4a148b1aa0e60e41be6f8c505583656
+
+============================================================
+📄 ФАЙЛ: Core\Containers\AppLifeTimeScope.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T18:21:24
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: b981afb736482a04dbfa2ee2c534110c
+
+============================================================
+📄 ФАЙЛ: Core\Containers\EmptySceneScope.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T18:23:39
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 46129e64d404aea4d9a1d4c7d0452651
+
+============================================================
+📄 ФАЙЛ: Core\Containers\GameplaySceneScope.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-19T18:03:15
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 6e4cfa9694a3a724daa696ffd1e53214
+
+============================================================
+📄 ФАЙЛ: Core\Containers\HubLifetimeScope.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T17:30:46
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: b38f47e5e81a3da49ad24ad13cfb486c
+
+============================================================
+📄 ФАЙЛ: Core\Containers\MainMenuSceneScope.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-17T11:03:49
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 511bc1e55466d474081a9d1a9c229ad0
+
+============================================================
+📄 ФАЙЛ: Core\EventBus\EventBus.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T16:32:22
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: ad2f29d231ce5e3419487308877d3d4a
+
+============================================================
+📄 ФАЙЛ: Core\EventBus\IEventBus.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T16:33:15
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 0f969ccb693ddf443a141c992ed4a038
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\BaseState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T16:38:09
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: ddc635c3f48b9c44a98086a1e832e08d
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\GameStateMachine.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T18:07:25
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: a1cbe09fc2d03a84d9dd375545244bb1
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\IGameStateMachine.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T18:07:25
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 288f2e45a08236e4a94b1c5af60ca413
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\StateType.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T16:52:10
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 6e9bc538ae8d284458b5cb991e194e93
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomModel.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-21T01:37:22
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 80dac5bf209bd3a45b7714325331dc19
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomNode.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-21T01:37:22
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 7924f170ee1176d4c92289f2676423c2
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version\RoomView.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-21T01:37:22
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 02cb72583f6c16f47998ca96d4aaac34
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\GameOverState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T17:46:30
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 4f67d47be5984d449b3ecf5d5cfc4888
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\GameplayState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T17:46:02
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 56b12725a75e6c64e9ad2d4eda75705f
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\HubState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T17:45:52
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 8bfbe712bcdba5043bdd2e3f4cf0f0f8
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\LoadingState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T17:46:30
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: ea9d0fa31d84a1f4b82b1b1ffbddc03d
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\MainMenuState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T17:45:52
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: a1a1a96236507ab4babf19721e0eb174
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States\PauseState.cs.meta
+📏 Размер: 59 байт
+📅 Изменен: 2026-01-16T17:46:10
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 1d12927770cf4d846b4747b2f51833c3
+
+============================================================
+📄 ФАЙЛ: Core.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:52:02
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 4ca10328476a7704fa1c00d5bc670bcb
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: DungeonMoving.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-20T00:03:06
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: d779ab8df92efae48aed6ceabf960b62
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Events.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:53:16
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 1842cde3907320542bffba5eb82b325a
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Handlers.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:52:59
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: effdcb2175df55c46bbbbfacb7cb166c
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Managers.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:52:50
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 115494bf14ad7844e943c66640406b3b
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Core\Containers.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:52:33
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: f4879b4a0535cb44e992d483074fa303
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Core\EventBus.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:52:24
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: d6fb8a2b718f899468bfd6d4dab98fc6
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-15T18:52:14
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: e3124754e0c3f174a9f7a2899db6c544
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Core\Generation_test_version.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-19T14:34:02
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: aed660e84fcea8846b67fed52ff0b5ae
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+============================================================
+📄 ФАЙЛ: Core\GameStateMachine\States.meta
+📏 Размер: 172 байт
+📅 Изменен: 2026-01-16T17:45:53
+🔧 Тип: Unknown
+============================================================
+
+fileFormatVersion: 2
+guid: 393326e9e560b914ea88cf73f74d25c7
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+
+================================================================================
+📈 ИТОГИ СБОРКИ КОНТЕКСТА:
+  Обработано файлов: 98
+  Общий размер обработанных данных: 312.4 KB
+  Скрипты (C#, шейдеры и т.д.): 44
+  Прочие файлы: 54
+  Время сборки: 14:49:37
+================================================================================
