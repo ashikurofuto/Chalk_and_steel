@@ -1,12 +1,13 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using ChalkAndSteel.Services;
+
 /// <summary>
-/// Интерфейс управления движением в хабе.
+///     .
 /// </summary>
 public interface IMovementService
-    {
-        void Initialize(Tilemap groundTilemap, Tilemap borderTilemap, Vector3Int startPosition);
-        bool CanMoveTo(Vector3Int targetPosition);
-        void MoveTo(Vector3Int targetPosition);
-        Vector3Int GetCurrentPosition();
+{
+    void Initialize(DualLayerTile[,] roomGrid, Vector3Int startPosition);
+    bool CanMoveTo(Vector3Int targetPosition);
+    void MoveTo(Vector3Int targetPosition);
+    Vector3Int GetCurrentPosition();
 }

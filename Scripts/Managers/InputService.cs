@@ -1,4 +1,4 @@
-// Managers/InputService.cs (����������)
+// Managers/InputService.cs ()
 using Architecture.GlobalModules;
 using Architecture.Services;
 using UnityEngine;
@@ -12,7 +12,7 @@ public sealed class InputService : IInputService
     private Vector2 _cachedMoveDirection;
     private bool _isEnabled;
 
-    // ��� ����������� �����
+    //   
     private Vector2 _lastMoveInput;
     private bool _moveKeyWasPressed;
 
@@ -23,7 +23,7 @@ public sealed class InputService : IInputService
         _eventBus = eventBus;
         _inputWrapper = inputWrapper;
 
-        // �������� �� ������� �����
+        //    
         _inputWrapper.OnMoveChanged += OnMoveChanged;
         _inputWrapper.OnInteract += OnInteract;
         _inputWrapper.OnInventory += OnInventory;
@@ -58,7 +58,7 @@ public sealed class InputService : IInputService
 
     public bool IsUndoPressed()
     {
-        // ��������� ���������� Ctrl+Z ����� ����� Input System
+        //   Ctrl+Z   Input System
         var keyboard = Keyboard.current;
         if (keyboard == null) return false;
 
@@ -66,7 +66,7 @@ public sealed class InputService : IInputService
                && keyboard.zKey.wasPressedThisFrame;
     }
 
-    // ����� �����: ���������, ���� �� ����� ������� �����������
+    //  : ,     
     public bool TryGetDiscreteMove(out Vector2 direction)
     {
         direction = Vector2.zero;
@@ -76,7 +76,7 @@ public sealed class InputService : IInputService
 
         if (isPressed && !_moveKeyWasPressed)
         {
-            // ������ ������� �������
+            //   
             direction = currentInput;
             _moveKeyWasPressed = true;
             return true;
@@ -84,7 +84,7 @@ public sealed class InputService : IInputService
 
         if (!isPressed)
         {
-            // ������� ��������
+            //  
             _moveKeyWasPressed = false;
         }
 
@@ -96,10 +96,11 @@ public sealed class InputService : IInputService
         _cachedMoveDirection = direction;
         _eventBus.Publish(new MoveInputEvent(direction));
 
-        // ���������� �������� (������ ��� �������)
+        //   (  )
         if (TryGetDiscreteMove(out Vector2 discreteDirection))
         {
-            //_eventBus.Publish(new DiscreteMoveInputEvent(discreteDirection));
+            Vector3Int discreteDirectionInt = new Vector3Int((int)discreteDirection.x, (int)discreteDirection.y, 0);
+            _eventBus.Publish(new DiscreteMoveInputEvent(discreteDirectionInt));
         }
     }
 

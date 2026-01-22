@@ -67,6 +67,18 @@ namespace ChalkAndSteel.Services
             // Публикуем событие перехода в стартовую комнату
             if (_eventBus != null)
                 _eventBus.Publish(new RoomTransitionEvent(-1, _currentRoomNode?.Room.Id ?? -1, false));
+
+            // Публикуем событие появления игрока в начальной комнате после генерации
+            if (_eventBus != null && _currentRoomNode?.Room?.Grid != null)
+            {
+                // Вычисляем начальную позицию игрока (обычно центр комнаты)
+                int centerX = _currentRoomNode.Room.Grid.GetLength(0) / 2;
+                int centerY = _currentRoomNode.Room.Grid.GetLength(1) / 2;
+                Vector3Int gridPosition = new Vector3Int(centerX, centerY, 0);
+                Vector3 worldPosition = new Vector3(centerX, 0, centerY); // Пример вычисления мировой позиции
+                
+                _eventBus.Publish(new PlayerSpawnedInRoomEvent(worldPosition, _currentRoomNode.Room.Id, gridPosition));
+            }
         }
         
        

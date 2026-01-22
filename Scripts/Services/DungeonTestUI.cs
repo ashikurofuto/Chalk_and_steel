@@ -22,7 +22,10 @@ namespace ChalkAndSteel.UI
         {
             SetupUI();
         }
-        
+        private void Start()
+        {
+            GenerateDungeon();
+        }
         private void SetupUI()
         {
             if (generateDungeonButton != null)

@@ -6,10 +6,8 @@ public class HubLifetimeScope : LifetimeScope
 {
     protected override void Configure(IContainerBuilder builder)
     {
-        // Регистрация сервиса перемещения
-        builder.Register<MovementService>(Lifetime.Scoped)
+        // Р РµРіРёСЃС‚СЂРёСЂСѓРµРј РЅРѕРІСѓСЋ СЂРµР°Р»РёР·Р°С†РёСЋ РґР»СЏ РєРѕРјРЅР°С‚РЅРѕР№ СЃРёСЃС‚РµРјС‹
+        builder.Register<RoomMovementService>(Lifetime.Scoped)
             .As<IMovementService>();
     }
-
-   
 }

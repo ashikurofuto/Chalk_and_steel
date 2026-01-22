@@ -1,4 +1,5 @@
 using Architecture.GlobalModules;
+using Architecture.GlobalModules.Commands;
 using Architecture.Services;
 using ChalkAndSteel.Services;
 using Core.StateMachine;
@@ -9,7 +10,7 @@ public class AppLifeTimeScope : LifetimeScope
 {
     protected override void Configure(IContainerBuilder builder)
     {
-        // 1. ����������� ���������� ��������
+        // 1. Регистрация основных сервисов
         builder.Register<EventBus>(Lifetime.Singleton)
             .As<IEventBus>();
         builder.Register<UnityInputActionsWrapper>(Lifetime.Singleton)
@@ -17,7 +18,7 @@ public class AppLifeTimeScope : LifetimeScope
         builder.Register<InputService>(Lifetime.Singleton)
             .As<IInputService>();
 
-        // 2. ����������� ���� ��������� ��� ��������� ��������
+        // 2. Регистрация состояний игры
         builder.Register<MainMenuState>(Lifetime.Singleton);
         builder.Register<HubState>(Lifetime.Singleton);
         builder.Register<GameplayState>(Lifetime.Singleton);
@@ -25,15 +26,15 @@ public class AppLifeTimeScope : LifetimeScope
         builder.Register<GameOverState>(Lifetime.Singleton);
         builder.Register<LoadingState>(Lifetime.Singleton);
 
-        // 3. ����������� ������ ���������
+        // 3. Регистрация машин состояний
         builder.Register<GameStateMachine>(Lifetime.Singleton)
             .As<IGameStateMachine>();
 
         builder.Register<PlayerService>(Lifetime.Singleton)
             .As<IPlayerService>();
 
-        // ������������ ����������� DungeonConfigService (������� 2)
-   
-
+        // Регистрация сервиса команд
+        builder.Register<ICommandService, CommandService>(Lifetime.Singleton);
+    
     }
 }

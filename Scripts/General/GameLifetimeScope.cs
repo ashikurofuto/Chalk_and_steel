@@ -3,6 +3,9 @@ using VContainer.Unity;
 using ChalkAndSteel.Services;
 using Architecture.GlobalModules;
 using ChalkAndSteel.UI;
+using Architecture.GlobalModules.Systems;
+using Architecture.GlobalModules.Handlers;
+using Architecture.GlobalModules.Commands;
 
 public class GameLifetimeScope : LifetimeScope
 {
@@ -21,7 +24,18 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<RoomService>(Lifetime.Singleton).As<IRoomService>(); // <-- Добавлено
         builder.Register<RoomGraphGenerator>(Lifetime.Singleton).AsSelf(); // <-- Добавлено для использования в генерации
 
-        // 4. Регистрация обработчиков MonoBehaviour в иерархии
+        // 3. Регистрация новой системы команд
+        builder.Register<ICommandService, CommandService>(Lifetime.Scoped);
+        
+        // 4. Регистрация команд
+        builder.Register<RoomMoveCommand>(Lifetime.Scoped);
+        builder.Register<MoveCommand>(Lifetime.Scoped);
+        
+        // 5. Регистрация обработчиков ввода
+        // builder.Register<RoomPlayerInputCommandHandler>(Lifetime.Scoped); // Убрано, так как это был старый обработчик
+        builder.Register<GridMovementHandler>(Lifetime.Scoped);
+        
+        // 6. Регистрация обработчиков MonoBehaviour в иерархии
         builder.RegisterComponentInHierarchy<RoomSceneHandler>(); // <-- Добавлено
         builder.RegisterComponentInHierarchy<DungeonTestUI>();
     }
