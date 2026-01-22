@@ -1,4 +1,5 @@
 using System;
+using UnityEngine.Tilemaps;
 
 namespace ChalkAndSteel.Services
 {
@@ -7,7 +8,7 @@ namespace ChalkAndSteel.Services
     /// </summary>
     public interface IRoomGenerationStrategy
     {
-        void Generate(Tile[,] grid, int stage);
+        void Generate(DualLayerTile[,] grid, int stage);
     }
 
     /// <summary>
@@ -15,7 +16,7 @@ namespace ChalkAndSteel.Services
     /// </summary>
     public interface IPathfindingValidator
     {
-        bool IsPathAvailable(Tile[,] grid, int startX, int startY, int endX, int endY);
+        bool IsPathAvailable(DualLayerTile[,] grid, int startX, int startY, int endX, int endY);
     }
 
     /// <summary>

@@ -10,9 +10,9 @@ namespace ChalkAndSteel.Services
         public int[] Connections { get; }
         public bool IsGenerated { get; set; }
         public bool IsCompleted { get; set; }
-        public Tile[,] Grid { get; set; }
+        public DualLayerTile[,] Grid { get; set; }
 
-        public Room(int id, RoomType type, int[] connections, bool isGenerated = false, bool isCompleted = false, Tile[,] grid = null)
+        public Room(int id, RoomType type, int[] connections, bool isGenerated = false, bool isCompleted = false, DualLayerTile[,] grid = null)
         {
             Id = id;
             Type = type;
@@ -23,7 +23,7 @@ namespace ChalkAndSteel.Services
         }
 
         // Реализация метода с тем же функционалом, что и record
-        public Room With(bool? IsGenerated = null, bool? IsCompleted = null, Tile[,] Grid = null, RoomType? Type = null)
+        public Room With(bool? IsGenerated = null, bool? IsCompleted = null, DualLayerTile[,] Grid = null, RoomType? Type = null)
         {
             return new Room(
                 Id,

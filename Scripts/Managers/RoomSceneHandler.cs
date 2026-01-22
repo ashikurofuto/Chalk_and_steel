@@ -47,6 +47,13 @@ public class RoomSceneHandler : MonoBehaviour
 
         // Загрузка новой комнаты
         LoadNewRoomVisualization();
+        
+        // Логируем информацию о переходе
+        var currentRoom = _roomService.GetCurrentRoom();
+        if (currentRoom != null)
+        {
+            Debug.Log($"Переход в комнату {currentRoom.Id} (Тип: {currentRoom.Type}). Соединения: [{string.Join(",", currentRoom.Connections)}]");
+        }
     }
 
     private void ClearCurrentRoomVisualization()
@@ -88,7 +95,7 @@ public class RoomSceneHandler : MonoBehaviour
                 var tile = currentRoom.Grid[x, y];
                 GameObject prefabToUse = null;
 
-                switch (tile.Type)
+                switch (tile.Base.Type)
                 {
                     case TileType.Floor: prefabToUse = _floorPrefab; break;
                     case TileType.Wall: prefabToUse = _wallPrefab; break;
@@ -113,27 +120,30 @@ public class RoomSceneHandler : MonoBehaviour
                 GameObject prefabToUse = null;
 
                 // Размещаем только тайлы, которые должны быть поверх базовых
-                switch (tile.Type)
+                if (tile.HasOverlay)
                 {
-                    case TileType.Trap: prefabToUse = _trapPrefab; break;
-                    case TileType.InteractiveObject: prefabToUse = _interactiveObjectPrefab; break;
-                    case TileType.Pillar: prefabToUse = _pillarPrefab; break;
-                }
-
-                if (prefabToUse != null)
-                {
-                    Vector3 position = new Vector3(x, y, -0.1f); // Размещаем чуть ниже Z-координаты базовых тайлов
-                    
-                    // Размещаем поверх уже существующего тайла или как дочерний элемент
-                    if (_tileObjects[x, y] != null)
+                    switch (tile.Overlay.Type)
                     {
-                        // Заменяем существующий тайл на новый (для интерактивных объектов)
-                        DestroyImmediate(_tileObjects[x, y]);
+                        case TileType.Trap: prefabToUse = _trapPrefab; break;
+                        case TileType.InteractiveObject: prefabToUse = _interactiveObjectPrefab; break;
+                        case TileType.Pillar: prefabToUse = _pillarPrefab; break;
                     }
-                    
-                    _tileObjects[x, y] = Instantiate(prefabToUse, position, Quaternion.identity, _tilesParent);
+
+                    if (prefabToUse != null)
+                    {
+                        Vector3 position = new Vector3(x, y, -0.1f); // Размещаем чуть ниже Z-координаты базовых тайлов
+                        
+                        // Размещаем поверх уже существующего тайла или как дочерний элемент
+                        // Не удаляем базовый тайл, а размещаем поверх него
+                        var overlayObject = Instantiate(prefabToUse, position, Quaternion.identity, _tilesParent);
+                        
+                        // Сохраняем ссылку на объект оверлея, а не заменяем базовый тайл
+                        _tileObjects[x, y] = overlayObject;
+                    }
                 }
             }
         }
+        
+        Debug.Log($"Визуализирована комната {currentRoom.Id} с {width}x{height} тайлами");
     }
 }
