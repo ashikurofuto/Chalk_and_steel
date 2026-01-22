@@ -1,6 +1,5 @@
 using Architecture.GlobalModules;
 using Architecture.GlobalModules.Commands;
-using Architecture.Services;
 using ChalkAndSteel.Services;
 using Core.StateMachine;
 using VContainer;
@@ -13,8 +12,7 @@ public class AppLifeTimeScope : LifetimeScope
         // 1. Регистрация основных сервисов
         builder.Register<EventBus>(Lifetime.Singleton)
             .As<IEventBus>();
-        builder.Register<UnityInputActionsWrapper>(Lifetime.Singleton)
-            .As<IInputActionsWrapper>();
+        
         builder.Register<InputService>(Lifetime.Singleton)
             .As<IInputService>();
 
