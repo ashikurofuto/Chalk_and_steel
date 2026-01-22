@@ -80,6 +80,7 @@ public class RoomSceneHandler : MonoBehaviour
         
         _tileObjects = new GameObject[width, height];
 
+        // Сначала размещаем базовые тайлы (пол, стены, входы, выходы)
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -93,18 +94,43 @@ public class RoomSceneHandler : MonoBehaviour
                     case TileType.Wall: prefabToUse = _wallPrefab; break;
                     case TileType.Entrance: prefabToUse = _entrancePrefab; break;
                     case TileType.Exit: prefabToUse = _exitPrefab; break;
-                    case TileType.Trap: prefabToUse = _trapPrefab; break;
-                    case TileType.InteractiveObject: prefabToUse = _interactiveObjectPrefab; break;
-                    case TileType.Pillar: prefabToUse = _pillarPrefab; break;
-                    // Add cases for other types if needed
                 }
 
                 if (prefabToUse != null)
                 {
                     Vector3 position = new Vector3(x, y, 0); // В 2D используем X-Y плоскость
+                    _tileObjects[x, y] = Instantiate(prefabToUse, position, Quaternion.identity, _tilesParent);
+                }
+            }
+        }
+        
+        // Затем размещаем тайлы ловушек и интерактивных объектов поверх базовых тайлов
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                var tile = currentRoom.Grid[x, y];
+                GameObject prefabToUse = null;
+
+                // Размещаем только тайлы, которые должны быть поверх базовых
+                switch (tile.Type)
+                {
+                    case TileType.Trap: prefabToUse = _trapPrefab; break;
+                    case TileType.InteractiveObject: prefabToUse = _interactiveObjectPrefab; break;
+                    case TileType.Pillar: prefabToUse = _pillarPrefab; break;
+                }
+
+                if (prefabToUse != null)
+                {
+                    Vector3 position = new Vector3(x, y, -0.1f); // Размещаем чуть ниже Z-координаты базовых тайлов
                     
-                    // Для ловушек и интерактивных объектов, размещаем на той же позиции, что и пол
-                    // чтобы они не оказались "в воздухе" над полом
+                    // Размещаем поверх уже существующего тайла или как дочерний элемент
+                    if (_tileObjects[x, y] != null)
+                    {
+                        // Заменяем существующий тайл на новый (для интерактивных объектов)
+                        DestroyImmediate(_tileObjects[x, y]);
+                    }
+                    
                     _tileObjects[x, y] = Instantiate(prefabToUse, position, Quaternion.identity, _tilesParent);
                 }
             }

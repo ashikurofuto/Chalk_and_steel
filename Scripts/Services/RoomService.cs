@@ -68,6 +68,7 @@ namespace ChalkAndSteel.Services
             if (_eventBus != null)
                 _eventBus.Publish(new RoomTransitionEvent(-1, _currentRoomNode?.Room.Id ?? -1, false));
         }
+     
 
         private void LogDungeonRooms()
         {
@@ -130,7 +131,21 @@ namespace ChalkAndSteel.Services
             // Логируем переход между комнатами
             Debug.Log($"Переход из комнаты {fromRoomId} (тип: {currentRoom.Type}) в комнату {targetRoomId} (тип: {targetRoom.Type})");
 
+            // Выводим в лог список всех комнат в графе подземелья
+            LogDungeonGraph();
+
             return true;
+        }
+        
+        private void LogDungeonGraph()
+        {
+            if (_dungeonMap?.Rooms == null) return;
+
+            Debug.Log("Текущий граф подземелья:");
+            foreach (var room in _dungeonMap.Rooms)
+            {
+                Debug.Log($"  Комната {room.Id}: Тип={room.Type}, Соединения=[{string.Join(",", room.Connections)}], Сгенерирована={room.IsGenerated}, Завершена={room.IsCompleted}");
+            }
         }
 
         public void CompleteCurrentRoom()

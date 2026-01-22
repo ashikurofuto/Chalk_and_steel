@@ -31,7 +31,7 @@ namespace ChalkAndSteel.Services
         {
             if (room.IsGenerated) return; // Не генерируем дважды
 
-            // Создаем сетку 11x11 для комнаты (внешняя стена 1 тайл + игровое поле 9 тайлов + внешняя стена 1 тайл)
+            // Создаем сетку 11x11 для комнаты (внешние стены 1 тайл + игровое поле 9 тайлов + внешние стены 1 тайл)
             var grid = new Tile[11, 11];
 
             // 1. Заполнить базовым полом (внутреннюю 9x9 область)
@@ -173,52 +173,47 @@ namespace ChalkAndSteel.Services
                 }
             }
             
-            // Размещаем вход и выход в зависимости от количества соединений
-            if (connections.Length >= 1)
+            // Определяем позиции дверей посередине каждой стороны
+            var doorPositions = new Dictionary<string, (int x, int y)>
             {
-                // Если есть хотя бы одно соединение, размещаем вход
-                // Для простоты используем верхнюю середину как вход
-                grid[width / 2, 0] = new Tile(TileType.Entrance, true, false);
-            }
+                {"top", (width / 2, 0)},        // верхняя стена (по середине)
+                {"bottom", (width / 2, height - 1)}, // нижняя стена (по середине)
+                {"left", (0, height / 2)},     // левая стена (по середине)
+                {"right", (width - 1, height / 2)}   // правая стена (по середине)
+            };
             
-            if (connections.Length >= 2)
+            // Размещаем двери в зависимости от количества соединений
+            if (connections.Length == 0)
             {
-                // Если есть два соединения, размещаем выход
-                // Для простоты используем нижнюю середину как выход
-                grid[width / 2, height - 1] = new Tile(TileType.Exit, true, false);
+                // Если нет соединений, это тупиковая комната - размещаем только вход
+                grid[doorPositions["top"].x, doorPositions["top"].y] = new Tile(TileType.Entrance, true, false);
             }
             else if (connections.Length == 1)
             {
-                // Если только одно соединение, возможно это тупик или специальная комната
-                // Размещаем выход в случайной доступной позиции на краях
-                var exitPositions = new List<(int x, int y)>();
+                // Если одна связь - вход и одна дверь для связи
+                grid[doorPositions["top"].x, doorPositions["top"].y] = new Tile(TileType.Entrance, true, false);
+                grid[doorPositions["bottom"].x, doorPositions["bottom"].y] = new Tile(TileType.Exit, true, false);
+            }
+            else if (connections.Length == 2)
+            {
+                // Если две связи - вход и выходы на противоположных сторонах
+                grid[doorPositions["top"].x, doorPositions["top"].y] = new Tile(TileType.Entrance, true, false);
+                grid[doorPositions["bottom"].x, doorPositions["bottom"].y] = new Tile(TileType.Exit, true, false);
+            }
+            else
+            {
+                // Если больше двух связей - размещаем вход на одной стороне и остальные на других сторонах
+                // Вход всегда сверху (по соглашению)
+                grid[doorPositions["top"].x, doorPositions["top"].y] = new Tile(TileType.Entrance, true, false);
                 
-                // Добавляем позиции на краях сетки (но не в углах, чтобы не мешать визуализации)
-                for (int i = 1; i < width - 1; i++)
-                {
-                    exitPositions.Add((i, 0)); // верхняя стена
-                    exitPositions.Add((i, height - 1)); // нижняя стена
-                }
+                // Определяем, какие стороны использовать для выходов
+                var sides = new List<string> { "bottom", "left", "right" };
                 
-                for (int i = 1; i < height - 1; i++)
+                // Размещаем выходы на доступных сторонах
+                for (int i = 1; i < connections.Length && i - 1 < sides.Count; i++)
                 {
-                    exitPositions.Add((0, i)); // левая стена
-                    exitPositions.Add((width - 1, i)); // правая стена
-                }
-                
-                // Исключаем позицию входа
-                int entranceX = width / 2;
-                exitPositions.RemoveAll(pos => pos.x == entranceX && pos.y == 0);
-                
-                if (exitPositions.Count > 0)
-                {
-                    var randomPos = exitPositions[new System.Random().Next(exitPositions.Count)];
-                    grid[randomPos.x, randomPos.y] = new Tile(TileType.Exit, true, false);
-                }
-                else
-                {
-                    // Если нет свободных позиций, ставим выход в противоположной стороне от входа
-                    grid[width / 2, height - 1] = new Tile(TileType.Exit, true, false);
+                    var side = sides[i - 1];
+                    grid[doorPositions[side].x, doorPositions[side].y] = new Tile(TileType.Exit, true, false);
                 }
             }
         }

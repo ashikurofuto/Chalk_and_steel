@@ -120,6 +120,29 @@ namespace ChalkAndSteel.Services
                     AddBidirectionalConnection(rooms, connection.from, connection.to);
                 }
             }
+            
+            // Ограничиваем количество соединений для каждой комнаты до 4 (по одному на каждую сторону)
+            LimitRoomConnections(rooms);
+        }
+
+        private void LimitRoomConnections(List<Room> rooms)
+        {
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                var room = rooms[i];
+                var connections = room.Connections.ToList();
+                
+                // Если у комнаты больше 4 соединений, ограничиваем до 4 случайных
+                if (connections.Count > 4)
+                {
+                    var limitedConnections = new List<int>();
+                    var shuffledConnections = connections.OrderBy(x => _random.Next()).Take(4);
+                    limitedConnections.AddRange(shuffledConnections);
+                    
+                    // Обновляем комнату с ограниченным количеством соединений
+                    rooms[i] = new Room(room.Id, room.Type, limitedConnections.ToArray(), room.IsGenerated, room.IsCompleted, room.Grid);
+                }
+            }
         }
 
         private void EnsureBidirectionalConnections(List<Room> rooms)
