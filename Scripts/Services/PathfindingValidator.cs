@@ -8,7 +8,7 @@ namespace ChalkAndSteel.Services
     /// </summary>
     public class PathfindingValidator : IPathfindingValidator
     {
-        public bool IsPathAvailable(Tile[,] grid, int startX, int startY, int endX, int endY)
+        public bool IsPathAvailable(DualLayerTile[,] grid, int startX, int startY, int endX, int endY)
         {
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
@@ -18,12 +18,23 @@ namespace ChalkAndSteel.Services
                 endX < 0 || endX >= width || endY < 0 || endY >= height)
                 return false;
 
-            if (!grid[startX, startY].IsPassable || !grid[endX, endY].IsPassable)
+            if (!grid[startX, startY].Base.IsPassable || !grid[endX, endY].Base.IsPassable)
                 return false;
 
             // Если старт и финиш совпадают, считаем, что путь есть
             if (startX == endX && startY == endY)
                 return true;
+
+            // Создаем сетку проходимости для алгоритма A*
+            bool[,] walkableGrid = new bool[width, height];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    // Для проходимости используем только базовый слой
+                    walkableGrid[x, y] = grid[x, y].Base.IsPassable;
+                }
+            }
 
             // Реализация A* алгоритма с использованием SortedSet вместо PriorityQueue
             var openSet = new SortedSet<NodeWithPriority>();
@@ -63,7 +74,7 @@ namespace ChalkAndSteel.Services
                         continue;
 
                     // Если клетка недоступна или уже в закрытом множестве
-                    if (!grid[newX, newY].IsPassable || closedSet.Contains((newX, newY)))
+                    if (!walkableGrid[newX, newY] || closedSet.Contains((newX, newY)))
                         continue;
 
                     int tentativeGScore = gScore[current.Position] + 1;

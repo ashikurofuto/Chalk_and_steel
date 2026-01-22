@@ -28,7 +28,7 @@ namespace ChalkAndSteel.Services
             var startRoomId = 0; // Первая комната
             var currentRoomId = startRoomId;
             
-            // Выводим в лог список всех комнат в подземелье
+            // Выводим в лог список всех комнат в графе
             LogGeneratedRooms(rooms);
 
             return new DungeonMap(rooms, startRoomId, currentRoomId);

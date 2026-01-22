@@ -14,7 +14,7 @@ namespace ChalkAndSteel.Services
             _random = random ?? new Random();
         }
 
-        public void Generate(Tile[,] grid, int stage)
+        public void Generate(DualLayerTile[,] grid, int stage)
         {
             // Минимальное содержимое - возможно, 0-1 враг или препятствие
             int width = grid.GetLength(0);
@@ -25,10 +25,16 @@ namespace ChalkAndSteel.Services
             {
                 for (int y = 2; y < height - 2; y++)
                 {
-                    // С небольшой вероятностью добавляем препятствие
+                    // С небольшой вероятностью добавляем препятствие как наложение
                     if (_random.NextDouble() < 0.1) // 10% шанс добавить препятствие
                     {
-                        grid[x, y] = new Tile(TileType.Pillar, false, false, stage <= (int)PlayerStage.KID);
+                        if (grid[x, y].Base.Type == TileType.Floor)
+                        {
+                            grid[x, y] = new DualLayerTile(
+                                grid[x, y].Base,
+                                new OverlayTile(TileType.Pillar, false, stage <= (int)PlayerStage.KID)
+                            );
+                        }
                     }
                 }
             }
@@ -47,7 +53,7 @@ namespace ChalkAndSteel.Services
             _random = random ?? new Random();
         }
 
-        public void Generate(Tile[,] grid, int stage)
+        public void Generate(DualLayerTile[,] grid, int stage)
         {
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
@@ -61,9 +67,12 @@ namespace ChalkAndSteel.Services
                 {
                     x = 2 + _random.Next(width - 4); // Избегаем краев
                     y = 2 + _random.Next(height - 4);
-                } while (grid[x, y].Type != TileType.Floor);
+                } while (grid[x, y].Base.Type != TileType.Floor);
 
-                grid[x, y] = new Tile(TileType.Wall, false, false, stage <= (int)PlayerStage.KID);
+                grid[x, y] = new DualLayerTile(
+                    grid[x, y].Base,
+                    new OverlayTile(TileType.Wall, false, stage <= (int)PlayerStage.KID)
+                );
             }
 
             int numTraps = _random.Next(1, 3); // 1-2 ловушки
@@ -74,9 +83,12 @@ namespace ChalkAndSteel.Services
                 {
                     x = 2 + _random.Next(width - 4);
                     y = 2 + _random.Next(height - 4);
-                } while (grid[x, y].Type != TileType.Floor);
+                } while (grid[x, y].Base.Type != TileType.Floor);
 
-                grid[x, y] = new Tile(TileType.Trap, true, false);
+                grid[x, y] = new DualLayerTile(
+                    grid[x, y].Base,
+                    new OverlayTile(TileType.Trap, true, false)
+                );
             }
         }
     }
@@ -93,7 +105,7 @@ namespace ChalkAndSteel.Services
             _random = random ?? new Random();
         }
 
-        public void Generate(Tile[,] grid, int stage)
+        public void Generate(DualLayerTile[,] grid, int stage)
         {
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
@@ -107,9 +119,12 @@ namespace ChalkAndSteel.Services
                 {
                     x = 2 + _random.Next(width - 4); // Избегаем краев более строго
                     y = 2 + _random.Next(height - 4);
-                } while (grid[x, y].Type != TileType.Floor);
+                } while (grid[x, y].Base.Type != TileType.Floor);
 
-                grid[x, y] = new Tile(TileType.Pillar, false, false, stage <= (int)PlayerStage.KID);
+                grid[x, y] = new DualLayerTile(
+                    grid[x, y].Base,
+                    new OverlayTile(TileType.Pillar, false, stage <= (int)PlayerStage.KID)
+                );
             }
         }
     }
@@ -126,7 +141,7 @@ namespace ChalkAndSteel.Services
             _random = random ?? new Random();
         }
 
-        public void Generate(Tile[,] grid, int stage)
+        public void Generate(DualLayerTile[,] grid, int stage)
         {
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
@@ -140,9 +155,12 @@ namespace ChalkAndSteel.Services
                 {
                     x = 2 + _random.Next(width - 4);
                     y = 2 + _random.Next(height - 4);
-                } while (grid[x, y].Type != TileType.Floor);
+                } while (grid[x, y].Base.Type != TileType.Floor);
 
-                grid[x, y] = new Tile(TileType.InteractiveObject, true, true);
+                grid[x, y] = new DualLayerTile(
+                    grid[x, y].Base,
+                    new OverlayTile(TileType.InteractiveObject, true, false)
+                );
             }
 
             // С вероятностью добавляем одного врага
@@ -153,10 +171,13 @@ namespace ChalkAndSteel.Services
                 {
                     x = 2 + _random.Next(width - 4);
                     y = 2 + _random.Next(height - 4);
-                } while (grid[x, y].Type != TileType.Floor);
+                } while (grid[x, y].Base.Type != TileType.Floor);
 
                 // Используем Pillar как символическое обозначение врага на карте
-                grid[x, y] = new Tile(TileType.Pillar, false, false, stage <= (int)PlayerStage.KID);
+                grid[x, y] = new DualLayerTile(
+                    grid[x, y].Base,
+                    new OverlayTile(TileType.Pillar, false, stage <= (int)PlayerStage.KID)
+                );
             }
         }
     }
@@ -173,7 +194,7 @@ namespace ChalkAndSteel.Services
             _random = random ?? new Random();
         }
 
-        public void Generate(Tile[,] grid, int stage)
+        public void Generate(DualLayerTile[,] grid, int stage)
         {
             // Комнаты с ключевым событием обычно имеют минимальное количество препятствий
             // для акцентирования внимания на событии
@@ -186,7 +207,10 @@ namespace ChalkAndSteel.Services
                 int x = width / 2;
                 int y = height / 2;
 
-                grid[x, y] = new Tile(TileType.InteractiveObject, true, true);
+                grid[x, y] = new DualLayerTile(
+                    grid[x, y].Base,
+                    new OverlayTile(TileType.InteractiveObject, true, false)
+                );
             }
         }
     }
@@ -203,7 +227,7 @@ namespace ChalkAndSteel.Services
             _random = random ?? new Random();
         }
 
-        public void Generate(Tile[,] grid, int stage)
+        public void Generate(DualLayerTile[,] grid, int stage)
         {
             // Финальная комната может иметь особое оформление в зависимости от стадии
             int width = grid.GetLength(0);
@@ -216,12 +240,14 @@ namespace ChalkAndSteel.Services
                 {
                     if (_random.NextDouble() < 0.15) // 15% шанс добавить элемент
                     {
-                        grid[x, y] = new Tile(
-                            _random.NextDouble() < 0.5 ? TileType.Pillar : TileType.InteractiveObject,
-                            _random.NextDouble() < 0.5,
-                            true,
-                            stage <= (int)PlayerStage.KID
-                        );
+                        if (grid[x, y].Base.Type == TileType.Floor)
+                        {
+                            var elementType = _random.NextDouble() < 0.5 ? TileType.Pillar : TileType.InteractiveObject;
+                            grid[x, y] = new DualLayerTile(
+                                grid[x, y].Base,
+                                new OverlayTile(elementType, true, stage <= (int)PlayerStage.KID)
+                            );
+                        }
                     }
                 }
             }

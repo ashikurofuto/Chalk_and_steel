@@ -68,7 +68,8 @@ namespace ChalkAndSteel.Services
             if (_eventBus != null)
                 _eventBus.Publish(new RoomTransitionEvent(-1, _currentRoomNode?.Room.Id ?? -1, false));
         }
-     
+        
+       
 
         private void LogDungeonRooms()
         {

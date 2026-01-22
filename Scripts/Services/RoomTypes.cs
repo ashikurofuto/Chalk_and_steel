@@ -35,21 +35,54 @@ namespace ChalkAndSteel.Services
     }
 
     /// <summary>
-    /// Состояние тайла
+    /// Состояние тайла основного слоя
     /// </summary>
-    public class Tile
+    public class BaseTile
     {
         public TileType Type { get; set; }
         public bool IsPassable { get; set; }
         public bool IsInteractive { get; set; }
         public bool IsDestructible { get; set; }
 
-        public Tile(TileType type, bool isPassable, bool isInteractive, bool isDestructible = false)
+        public BaseTile(TileType type, bool isPassable, bool isInteractive, bool isDestructible = false)
         {
             Type = type;
             IsPassable = isPassable;
             IsInteractive = isInteractive;
             IsDestructible = isDestructible;
+        }
+    }
+    
+    /// <summary>
+    /// Состояние тайла декоративного/функционального слоя
+    /// </summary>
+    public class OverlayTile
+    {
+        public TileType Type { get; set; }
+        public bool IsInteractive { get; set; }
+        public bool IsDestructible { get; set; }
+
+        public OverlayTile(TileType type, bool isInteractive, bool isDestructible = false)
+        {
+            Type = type;
+            IsInteractive = isInteractive;
+            IsDestructible = isDestructible;
+        }
+    }
+    
+    /// <summary>
+    /// Комбинированный тайл с двумя слоями: основной (пол/стена) и накладываемый (ловушки, интерактивные объекты)
+    /// </summary>
+    public class DualLayerTile
+    {
+        public BaseTile Base { get; set; }
+        public OverlayTile Overlay { get; set; }
+        public bool HasOverlay => Overlay != null;
+
+        public DualLayerTile(BaseTile baseTile, OverlayTile overlayTile = null)
+        {
+            Base = baseTile;
+            Overlay = overlayTile;
         }
     }
 }
