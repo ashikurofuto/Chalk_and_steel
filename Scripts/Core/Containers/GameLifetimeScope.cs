@@ -2,8 +2,7 @@ using VContainer;
 using VContainer.Unity;
 using ChalkAndSteel.Services;
 using Architecture.GlobalModules;
-using Architecture.GlobalModules.Handlers;
-using Architecture.GlobalModules.Commands;
+using Architecture.GlobalModules.Systems;
 
 public class GameLifetimeScope : LifetimeScope
 {

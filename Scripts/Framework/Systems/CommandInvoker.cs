@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Architecture.GlobalModules.Commands
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
     /// Invoker - инициатор, вызывает команды

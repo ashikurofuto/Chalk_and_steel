@@ -1,5 +1,5 @@
 using Architecture.GlobalModules;
-using Architecture.Services;
+using Architecture.GlobalModules.Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

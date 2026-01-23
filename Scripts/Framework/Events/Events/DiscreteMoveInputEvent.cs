@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Architecture.Services
+namespace Architecture.GlobalModules.Events
 {
     /// <summary>
     /// Событие дискретного ввода движения (например, пошаговое перемещение)

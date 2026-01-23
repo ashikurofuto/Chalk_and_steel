@@ -1,6 +1,6 @@
 using System;
 
-namespace Architecture.GlobalModules.Commands
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
     /// Простой интерфейс команды по образцу паттерна Command

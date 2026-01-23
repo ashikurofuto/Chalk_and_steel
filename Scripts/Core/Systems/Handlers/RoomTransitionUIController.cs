@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI; // Для работы с UI элементами
 using TMPro; // Для работы с TextMeshPro
 using Architecture.GlobalModules;
-using Architecture.GlobalModules.Handlers;
+using Architecture.GlobalModules.Systems;
 using VContainer;
 
 /// <summary>

@@ -1,12 +1,12 @@
 using Architecture.GlobalModules;
-using Architecture.GlobalModules.Commands;
+using Architecture.GlobalModules.Systems;
 using ChalkAndSteel.Services;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using VContainer;
 using VContainer.Unity;
 
-namespace Architecture.GlobalModules.Handlers
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
     /// Обработчик движения по сетке с использованием новой системы команд

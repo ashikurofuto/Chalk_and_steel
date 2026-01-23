@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Architecture.GlobalModules.Commands
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
     /// Сервис для управления командами перемещения игрока

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Architecture.GlobalModules.Commands
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
     /// Receiver - получатель команд, в данном случае объект, который перемещается

@@ -1,37 +1,36 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
-namespace Architecture.GlobalModules.Commands
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
-    /// Команда перемещения сущности
+    /// Команда перемещения между комнатами
     /// </summary>
-    public class MoveCommand : ICommand
+    public class RoomMoveCommand : ICommand
     {
         private Vector3Int _direction;
         private PlayerReceiver _playerReceiver;
 
         /// <summary>
-        /// Конструктор команды перемещения
+        /// Конструктор команды перемещения между комнатами
         /// </summary>
         /// <param name="playerReceiver">Объект, осуществляющий перемещение</param>
         /// <param name="direction">Направление перемещения</param>
-        public MoveCommand(PlayerReceiver playerReceiver, Vector3Int direction) 
+        public RoomMoveCommand(PlayerReceiver playerReceiver, Vector3Int direction) 
         {
             this._playerReceiver = playerReceiver;
             this._direction = direction;
         }
 
         /// <summary>
-        /// Выполняет команду перемещения
+        /// Выполняет команду перемещения между комнатами
         /// </summary>
         public void Execute()
         {
-            _playerReceiver.MoveInGrid(_direction);
+            _playerReceiver.MoveBetweenRooms(_direction);
         }
 
         /// <summary>
-        /// Отменяет команду перемещения
+        /// Отменяет команду перемещения между комнатами
         /// </summary>
         public void Undo()
         {

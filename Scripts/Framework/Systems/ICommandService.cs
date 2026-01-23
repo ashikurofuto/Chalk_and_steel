@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Architecture.GlobalModules.Commands
+namespace Architecture.GlobalModules.Systems
 {
     /// <summary>
     /// Интерфейс для сервиса команд, через который будут передаваться данные для PlayerReceiver
