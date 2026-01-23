@@ -17,6 +17,9 @@ public class GameLifetimeScope : LifetimeScope
         // builder.Register<ProgressService>(Lifetime.Singleton).As<IProgressService>(); // Закомментировано, если не существует
         builder.Register<PlayerService>(Lifetime.Singleton).As<IPlayerService>();
 
+        // Регистрация сервиса генерации комнат
+        builder.Register<RoomGenerationService>(Lifetime.Singleton).As<IRoomGeneratorService>();
+
 
         // 3. Регистрация новой системы команд
         builder.Register<ICommandService, CommandService>(Lifetime.Scoped);
@@ -29,6 +32,9 @@ public class GameLifetimeScope : LifetimeScope
         // builder.Register<RoomPlayerInputCommandHandler>(Lifetime.Scoped); // Убрано, так как это был старый обработчик
         builder.Register<GridMovementHandler>(Lifetime.Scoped);
         
+        // 6. Регистрация UI контроллеров
+        builder.Register<RoomTransitionUIController>(Lifetime.Scoped);
+
 
     }
 }
