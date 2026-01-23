@@ -38,6 +38,13 @@ public interface IRoomGeneratorService
     void SetRoomFactory(System.Func<RoomView, RoomView> factory);
     
     /// <summary>
+    /// Генерирует все комнаты сразу
+    /// </summary>
+    /// <param name="prefab">Префаб комнаты</param>
+    /// <param name="maxRooms">Максимальное количество комнат</param>
+    void GenerateAllRoomsAtOnce(RoomView prefab, int maxRooms);
+    
+    /// <summary>
     /// Получает все сгенерированные комнаты
     /// </summary>
     /// <returns>Список всех сгенерированных комнат</returns>

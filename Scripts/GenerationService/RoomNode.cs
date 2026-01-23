@@ -93,6 +93,28 @@ public class RoomNode
     }
     
     /// <summary>
+    /// Получает противоположное направление
+    /// </summary>
+    /// <param name="direction">Исходное направление</param>
+    /// <returns>Противоположное направление</returns>
+    private DoorDirection GetOppositeDirection(DoorDirection direction)
+    {
+        switch (direction)
+        {
+            case DoorDirection.Top:
+                return DoorDirection.Bottom;
+            case DoorDirection.Bottom:
+                return DoorDirection.Top;
+            case DoorDirection.Left:
+                return DoorDirection.Right;
+            case DoorDirection.Right:
+                return DoorDirection.Left;
+            default:
+                return direction;
+        }
+    }
+    
+    /// <summary>
     /// Удаляет соседа в указанном направлении
     /// </summary>
     /// <param name="direction">Направление для удаления соседа</param>
@@ -192,26 +214,23 @@ public class RoomNode
     {
         return Neighbors.Count >= MAX_NEIGHBORS;
     }
-    
+
     /// <summary>
-    /// Получает противоположное направление
+    /// Проверяет, является ли указанная комната соседом в любом направлении
     /// </summary>
-    /// <param name="direction">Исходное направление</param>
-    /// <returns>Противоположное направление</returns>
-    private DoorDirection GetOppositeDirection(DoorDirection direction)
+    /// <param name="roomNode">Комната для проверки</param>
+    /// <returns>True, если комната является соседом, иначе false</returns>
+    public bool HasNeighborInAnyDirection(RoomNode roomNode)
     {
-        switch (direction)
+        foreach (var kvp in Neighbors)
         {
-            case DoorDirection.Top:
-                return DoorDirection.Bottom;
-            case DoorDirection.Bottom:
-                return DoorDirection.Top;
-            case DoorDirection.Left:
-                return DoorDirection.Right;
-            case DoorDirection.Right:
-                return DoorDirection.Left;
-            default:
-                return direction;
+            if (kvp.Value == roomNode)
+            {
+                return true;
+            }
         }
+        
+        return false;
     }
+
 }

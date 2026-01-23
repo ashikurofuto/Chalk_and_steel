@@ -107,5 +107,16 @@ namespace Architecture.GlobalModules.Commands
         {
             _transform.position = position;
         }
+
+        public void MoveToWorldPosition(Vector3 worldPosition)
+        {
+            // Сохраняем текущую позицию перед перемещением
+            _lastPosition = _transform.position;
+
+            // Устанавливаем новую позицию
+            _transform.position = worldPosition;
+
+            Debug.Log($"Player moved to world position: {worldPosition}");
+        }
     }
 }

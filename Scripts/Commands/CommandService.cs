@@ -18,6 +18,18 @@ namespace Architecture.GlobalModules.Commands
             _invoker = new CommandInvoker();
         }
 
+        public void MovePlayerToWorldPosition(Vector3 worldPosition)
+        {
+            if (_playerReceiver != null)
+            {
+                _playerReceiver.MoveToWorldPosition(worldPosition);
+            }
+            else
+            {
+                Debug.LogWarning("Cannot move player to world position - PlayerReceiver is null");
+            }
+        }
+
         /// <summary>
         /// Инициализирует PlayerReceiver с необходимыми данными
         /// </summary>
@@ -126,11 +138,31 @@ namespace Architecture.GlobalModules.Commands
                 
                 Debug.Log($"Checking move in grid from {currentPosition} to {targetPosition}");
                 
-                // Предполагаем, что если сетка существует, то проверка проходимости делается через тайлмап
-                // В реальной реализации тут будет дополнительная проверка проходимости клетки
-                bool result = true; // Заглушка - в реальном проекте должна быть проверка проходимости
-                Debug.Log($"Grid move result: {result}");
-                return result;
+                // Проверяем проходимость целевой ячейки
+                // Здесь нужно получить тайлмап пола и стены и проверить, проходима ли целевая ячейка
+                // Например:
+                // bool isTargetPassable = floorTilemap.HasTile(targetPosition) && !wallTilemap.HasTile(targetPosition);
+                // bool result = isTargetPassable;
+                // Но поскольку у нас нет прямого доступа к тайлмапам, мы можем использовать _roomGrid, если он доступен
+                // или использовать другой способ проверки проходимости
+
+                // Заглушка: предположим, что _roomGrid содержит информацию о проходимости
+                // и что _roomGrid синхронизирован с тайлмапами
+                if (_roomGrid != null &&
+                    targetPosition.x >= 0 && targetPosition.x < _roomGrid.GetLength(0) &&
+                    targetPosition.y >= 0 && targetPosition.y < _roomGrid.GetLength(1))
+                {
+                    bool result = _roomGrid[targetPosition.x, targetPosition.y] != 0;
+                    Debug.Log($"Grid move result (using _roomGrid): {result} at position ({targetPosition.x}, {targetPosition.y})");
+                    return result;
+                }
+                else
+                {
+                    // Если _roomGrid не доступен, предполагаем, что все проходимо (не идеально, но лучше, чем всегда true)
+                    // В идеале, здесь должна быть проверка через тайлмапы
+                    Debug.LogWarning("CanMoveTo: _roomGrid not available for grid-based move validation, assuming passable");
+                    return true;
+                }
             }
             else if (_roomGrid != null)
             {

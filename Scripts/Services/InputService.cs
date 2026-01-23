@@ -1,25 +1,23 @@
-// Managers/InputService.cs ()
 using Architecture.GlobalModules;
 using Architecture.Services;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public sealed class InputService : IInputService
 {
     private readonly IEventBus _eventBus;
+    private InputSystem_Actions _inputActions; // Добавлено
 
     private Vector2 _cachedMoveDirection;
     private bool _isEnabled;
-    private BaseInput baseInput;
-    //   
-    private Vector2 _lastMoveInput;
-    private bool _moveKeyWasPressed;
 
     public InputService(
         IEventBus eventBus)
     {
         _eventBus = eventBus;
+
+        // Инициализируем InputSystem_Actions
+        _inputActions = new InputSystem_Actions();
 
         Enable();
     }
@@ -28,6 +26,9 @@ public sealed class InputService : IInputService
     {
         if (_isEnabled) return;
         _isEnabled = true;
+
+        // Включаем Input Actions
+        _inputActions.Player.Enable();
     }
 
     public void Disable()
@@ -35,107 +36,65 @@ public sealed class InputService : IInputService
         if (!_isEnabled) return;
 
         _isEnabled = false;
+
+        // Отключаем Input Actions
+        _inputActions.Player.Disable();
     }
 
-    public Vector2 GetMoveDirection() => _cachedMoveDirection;
+    public Vector2 GetMoveDirection()
+    {
+        // Обновляем кэшированное направление движения из InputSystem
+        if (_isEnabled)
+        {
+            _cachedMoveDirection = _inputActions.Player.Move.ReadValue<Vector2>();
+
+            // Публикуем событие, если направление изменилось
+            if (_cachedMoveDirection.magnitude > 0.1f)
+            {
+                _eventBus.Publish(new MoveInputEvent(_cachedMoveDirection));
+            }
+        }
+
+        return _cachedMoveDirection;
+    }
 
     public bool IsInteractPressed()
     {
-        throw new System.NotImplementedException();
+        if (_isEnabled)
+        {
+            return _inputActions.Player.Interact.triggered;
+        }
+        return false;
     }
 
     public bool IsInventoryPressed()
     {
-        throw new System.NotImplementedException();
+        if (_isEnabled)
+        {
+            return _inputActions.Player.Inventory.triggered;
+        }
+        return false;
     }
 
     public bool IsPausePressed()
     {
-        throw new System.NotImplementedException();
+        if (_isEnabled)
+        {
+            return _inputActions.Player.Pause.triggered;
+        }
+        return false;
     }
 
     public bool IsUndoPressed()
     {
-        throw new System.NotImplementedException();
+        if (_isEnabled)
+        {
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return false;
+
+            return (keyboard.ctrlKey.isPressed || keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed)
+                   && keyboard.zKey.wasPressedThisFrame;
+        }
+        return false;
     }
-    /*
-   public bool IsInteractPressed() => _inputWrapper.Interact;
-
-   public bool IsInventoryPressed() => _inputWrapper.Inventory;
-
-   public bool IsPausePressed() => _inputWrapper.Pause;
-
-   public bool IsUndoPressed()
-   {
-       //   Ctrl+Z   Input System
-       var keyboard = Keyboard.current;
-       if (keyboard == null) return false;
-
-       return (keyboard.ctrlKey.isPressed || keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed) 
-              && keyboard.zKey.wasPressedThisFrame;
-   }
-
-   //  : ,     
-   public bool TryGetDiscreteMove(out Vector2 direction)
-   {
-       direction = Vector2.zero;
-
-       Vector2 currentInput = _cachedMoveDirection;
-       bool isPressed = currentInput.magnitude > 0.1f;
-
-       if (isPressed && !_moveKeyWasPressed)
-       {
-           //   
-           direction = currentInput;
-           _moveKeyWasPressed = true;
-           return true;
-       }
-
-       if (!isPressed)
-       {
-           //  
-           _moveKeyWasPressed = false;
-       }
-
-       return false;
-   }
-
-   private void OnMoveChanged(Vector2 direction)
-   {
-       _cachedMoveDirection = direction;
-       _eventBus.Publish(new MoveInputEvent(direction));
-
-       //   (  )
-       if (TryGetDiscreteMove(out Vector2 discreteDirection))
-       {
-           Vector3Int discreteDirectionInt = new Vector3Int((int)discreteDirection.x, (int)discreteDirection.y, 0);
-           _eventBus.Publish(new DiscreteMoveInputEvent(discreteDirectionInt));
-       }
-   }
-
-   private void OnInteract()
-   {
-       _eventBus.Publish(new InteractInputEvent());
-   }
-
-   private void OnInventory()
-   {
-       _eventBus.Publish(new InventoryInputEvent());
-   }
-
-   private void OnPause()
-   {
-       _eventBus.Publish(new PauseInputEvent());
-   }
-
-   public void Dispose()
-   {
-       Disable();
-       _inputWrapper.OnMoveChanged -= OnMoveChanged;
-       _inputWrapper.OnInteract -= OnInteract;
-       _inputWrapper.OnInventory -= OnInventory;
-       _inputWrapper.OnPause -= OnPause;
-       _inputWrapper.Dispose();
-   }
-*/
 }

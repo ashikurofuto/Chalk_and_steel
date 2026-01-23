@@ -235,12 +235,11 @@ public class RoomTransitionUIController : MonoBehaviour
     {
         if (button == null) return;
         
-        // Проверяем, есть ли сосед в этом направлении или можно ли создать соседа
+        // Проверяем, есть ли сосед в этом направлении
         bool hasNeighbor = currentRoom.HasNeighbor(direction);
-        bool canHaveNeighbor = !currentRoom.IsMaxNeighborsReached();
         
-        // Кнопка активна, если уже есть сосед или можно создать нового
-        bool isActive = hasNeighbor || canHaveNeighbor;
+        // Кнопка активна, если есть сосед в этом направлении
+        bool isActive = hasNeighbor;
         
         button.gameObject.SetActive(isActive);
     }

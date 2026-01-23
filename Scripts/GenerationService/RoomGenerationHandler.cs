@@ -52,8 +52,8 @@ public class RoomGenerationHandler : MonoBehaviour
             return;
         }
         
-        // Инициализируем генерацию - создаем только первую комнату
-        roomGeneratorService.InitializeRooms(roomViewComponent, 10); // Пример: до 10 комнат
+        // Генерируем все комнаты сразу
+        roomGeneratorService.GenerateAllRoomsAtOnce(roomViewComponent, 10); // Пример: 10 комнат
         
         // Загружаем текущую комнату
         LoadCurrentRoom();

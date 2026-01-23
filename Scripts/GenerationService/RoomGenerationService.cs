@@ -186,6 +186,257 @@ public class RoomGenerationService : IRoomGeneratorService
     }
     
     /// <summary>
+    /// Генерирует все комнаты сразу
+    /// </summary>
+    /// <param name="prefab">Префаб комнаты</param>
+    /// <param name="maxRooms">Максимальное количество комнат</param>
+    public void GenerateAllRoomsAtOnce(RoomView prefab, int maxRooms)
+    {
+        this.roomPrefab = prefab;
+        this.maxRooms = maxRooms;
+
+        // Очищаем список комнат
+        roomList.Clear();
+
+        // Проверяем, что нужно создавать хотя бы одну комнату
+        if (maxRooms <= 0 || prefab == null)
+        {
+            return;
+        }
+
+        // Создаем первую комнату
+        RoomView firstRoomView = CreateRoomInstance(prefab);
+        if (firstRoomView == null)
+        {
+            Debug.LogWarning("Failed to create first room instance, stopping generation");
+            return;
+        }
+        
+        RoomNode firstNode = new RoomNode(firstRoomView);
+        
+        // Добавляем первую комнату в список
+        roomList.AddLast(firstNode);
+        
+        // Устанавливаем первую комнату как текущую
+        roomList.SetCurrentNode(firstNode);
+        
+        // Создаем оставшиеся комнаты и соединяем их
+        int remainingRooms = maxRooms - 1;
+        var allNodes = new List<RoomNode> { firstNode }; // Список всех созданных комнат для дальнейшего соединения
+        
+        // Создаем все оставшиеся комнаты
+        while (remainingRooms > 0 && allNodes.Count < maxRooms)
+        {
+            RoomView newRoomView = CreateRoomInstance(prefab);
+            if (newRoomView == null)
+            {
+                Debug.LogWarning("Failed to create room instance, stopping generation");
+                break;
+            }
+            
+            RoomNode newNode = new RoomNode(newRoomView);
+            allNodes.Add(newNode);
+            
+            // Добавляем новую комнату в список
+            roomList.AddLast(newNode);
+            
+            remainingRooms--;
+        }
+        
+        // Теперь соединяем комнаты между собой, чтобы образовать сеть
+        ConnectRoomsInNetwork(allNodes);
+        
+        _isInitialized = true;
+    }
+    
+    /// <summary>
+    /// Соединяет комнаты в сеть с учетом требований:
+    /// 1. Избегаем прямой связи от первой к последней комнате
+    /// 2. Последняя комната соединяется только с предпоследней
+    /// </summary>
+    /// <param name="nodes">Список комнат для соединения</param>
+    private void ConnectRoomsInNetwork(List<RoomNode> nodes)
+    {
+        if (nodes == null || nodes.Count == 0)
+        {
+            return;
+        }
+
+        var random = new System.Random();
+
+        // Создаем основную цепочку комнат, соединяя каждую с последующей
+        // Это создаст основной путь через подземелье
+        for (int i = 0; i < nodes.Count - 1; i++)
+        {
+            var currentRoom = nodes[i];
+            var nextRoom = nodes[i + 1];
+
+            var availableDirections = GetAvailableDirections(currentRoom);
+            if (availableDirections.Length > 0)
+            {
+                // Используем случайное доступное направление
+                var direction = availableDirections[random.Next(availableDirections.Length)];
+                currentRoom.AddNeighbor(direction, nextRoom);
+            }
+        }
+
+        // Теперь добавляем дополнительные соединения, избегая прямой связи от первой к последней
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            var currentRoom = nodes[i];
+
+            // Определяем, сколько дополнительных соединений создать
+            // Уменьшаем вероятность для первой и последней комнат, чтобы избежать прямой связи
+            int maxAdditionalConnections = random.Next(0, 2); // 0-1 дополнительных соединений
+
+            // Для первой комнаты ограничиваем соединения, чтобы избежать прямой связи с последней
+            if (i == 0)
+            {
+                maxAdditionalConnections = random.Next(0, 1); // 0 или 1 дополнительное соединение
+            }
+
+            // Для последней комнаты не создаем дополнительных соединений, кроме связи с предпоследней
+            if (i == nodes.Count - 1)
+            {
+                continue; // Пропускаем последнюю комнату
+            }
+
+            // Создаем дополнительные соединения
+            for (int j = 0; j < maxAdditionalConnections; j++)
+            {
+                // Выбираем случайную комнату для соединения
+                // Исключаем: текущую комнату, первую комнату (если текущая - не вторая), последнюю комнату
+                int randomIndex;
+
+                // Повторяем, пока не найдем подходящую комнату для соединения
+                do
+                {
+                    randomIndex = random.Next(nodes.Count);
+
+                    // Не соединяем с самим собой
+                    if (randomIndex == i) continue;
+
+                    // Не соединяем первую комнату напрямую с последней
+                    if ((i == 0 && randomIndex == nodes.Count - 1) ||
+                        (randomIndex == 0 && i == nodes.Count - 1)) continue;
+
+                    // Не соединяем с соседом по основному пути (чтобы избежать циклов)
+                    if ((i < nodes.Count - 1 && randomIndex == i + 1) ||
+                        (i > 0 && randomIndex == i - 1)) continue;
+
+                    // Проверяем, есть ли уже соединение
+                    if (currentRoom.HasNeighborInAnyDirection(nodes[randomIndex])) continue;
+
+                    // Проверяем, достигнут ли лимит соседей для текущей комнаты
+                    if (currentRoom.IsMaxNeighborsReached()) break;
+
+                    break; // Найдена подходящая комната
+
+                } while (true);
+
+                // Проверяем, достигнут ли лимит соседей
+                if (currentRoom.IsMaxNeighborsReached()) break;
+
+                // Проверяем, что нашли подходящую комнату
+                if (randomIndex >= 0 && randomIndex < nodes.Count &&
+                    randomIndex != i &&
+                    !(i == 0 && randomIndex == nodes.Count - 1) &&
+                    !currentRoom.HasNeighborInAnyDirection(nodes[randomIndex]))
+                {
+                    var targetRoom = nodes[randomIndex];
+
+                    var availableDirections = GetAvailableDirections(currentRoom);
+                    if (availableDirections.Length > 0)
+                    {
+                        var direction = availableDirections[random.Next(availableDirections.Length)];
+                        currentRoom.AddNeighbor(direction, targetRoom);
+                    }
+                }
+            }
+        }
+
+        // Убедимся, что последняя комната соединена только с предпоследней
+        if (nodes.Count > 1)
+        {
+            var lastRoom = nodes[nodes.Count - 1];
+            var prevLastRoom = nodes[nodes.Count - 2];
+
+            // Удаляем все соединения у последней комнаты, кроме соединения с предпоследней
+            var directionsToRemove = new List<DoorDirection>();
+            var allDirections = Enum.GetValues(typeof(DoorDirection)) as DoorDirection[];
+
+            foreach (var direction in allDirections)
+            {
+                if (lastRoom.HasNeighbor(direction))
+                {
+                    var neighbor = lastRoom.GetNeighbor(direction);
+                    if (neighbor != prevLastRoom)
+                    {
+                        directionsToRemove.Add(direction);
+                    }
+                }
+            }
+
+            // Удаляем лишние соединения
+            foreach (var direction in directionsToRemove)
+            {
+                lastRoom.RemoveNeighbor(direction);
+            }
+
+            // Убедимся, что соединение с предпоследней комнатой существует
+            if (!lastRoom.HasNeighborInAnyDirection(prevLastRoom))
+            {
+                var availableDirections = GetAvailableDirections(lastRoom);
+                if (availableDirections.Length > 0)
+                {
+                    var direction = availableDirections[0]; // Используем первое доступное направление
+                    lastRoom.AddNeighbor(direction, prevLastRoom);
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Находит направление соединения между двумя комнатами
+    /// </summary>
+    /// <param name="fromRoom">Комната-источник</param>
+    /// <param name="toRoom">Комната-назначение</param>
+    /// <returns>Направление соединения или null, если комнаты не соединены</returns>
+    private DoorDirection? GetConnectionDirection(RoomNode fromRoom, RoomNode toRoom)
+    {
+        var allDirections = Enum.GetValues(typeof(DoorDirection)) as DoorDirection[];
+        foreach (var direction in allDirections)
+        {
+            if (fromRoom.HasNeighbor(direction) && fromRoom.GetNeighbor(direction) == toRoom)
+            {
+                return direction;
+            }
+        }
+        return null;
+    }
+    
+    /// <summary>
+    /// Деактивирует все комнаты, кроме первой
+    /// </summary>
+    /// <param name="nodes">Список всех комнат</param>
+    private void DeactivateAllRoomsExceptFirst(List<RoomNode> nodes)
+    {
+        if (nodes == null || nodes.Count == 0)
+        {
+            return;
+        }
+        
+        for (int i = 1; i < nodes.Count; i++) // Начинаем с 1, чтобы оставить первую комнату активной
+        {
+            var roomView = nodes[i].Room;
+            if (roomView != null && roomView.gameObject != null)
+            {
+                roomView.gameObject.SetActive(false);
+            }
+        }
+    }
+    
+    /// <summary>
     /// Генерирует комнаты в двусвязный список (остался для совместимости, но теперь вызывает InitializeRooms)
     /// </summary>
     /// <param name="prefab">Префаб комнаты</param>

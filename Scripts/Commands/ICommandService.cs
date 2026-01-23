@@ -38,5 +38,11 @@ namespace Architecture.GlobalModules.Commands
         /// <param name="direction">Направление для проверки</param>
         /// <returns>True, если перемещение возможно</returns>
         bool CanMoveTo(Vector3Int direction);
+
+        /// <summary>
+        /// Перемещает игрока в заданную мировую позицию
+        /// </summary>
+        /// <param name="worldPosition">Мировая позиция для перемещения</param>
+        void MovePlayerToWorldPosition(Vector3 worldPosition);
     }
 }
