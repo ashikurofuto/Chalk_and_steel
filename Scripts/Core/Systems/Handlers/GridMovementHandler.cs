@@ -67,7 +67,7 @@ namespace Architecture.GlobalModules.Systems
             _isInputEnabled = false;
 
             // Находим RoomGenerationHandler после внедрения зависимостей
-            _roomGenerationHandler = FindObjectOfType<RoomGenerationHandler>();
+            _roomGenerationHandler = Object.FindFirstObjectByType<RoomGenerationHandler>();
 
             if (_roomGenerationHandler == null)
             {
