@@ -33,7 +33,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<GridMovementHandler>(Lifetime.Scoped);
         
         // 6. Регистрация UI контроллеров
-        builder.Register<RoomTransitionUIController>(Lifetime.Scoped);
+        // Удален RoomTransitionUIController, так как он больше не используется
 
 
     }
