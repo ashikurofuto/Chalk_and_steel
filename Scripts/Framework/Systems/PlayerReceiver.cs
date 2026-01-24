@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace Architecture.GlobalModules.Systems
 {
@@ -11,27 +12,42 @@ namespace Architecture.GlobalModules.Systems
         private Grid _grid;
         private int[,] _roomGrid;
         private Vector3 _lastPosition;
+        private MonoBehaviour _monoBehaviour;
+        private Coroutine _currentMoveCoroutine;
 
-        public PlayerReceiver(Transform transform, Grid grid = null, int[,] roomGrid = null)
+        // Делегат для уведомления о завершении перемещения
+        private System.Action _onMoveCompleted;
+
+        public PlayerReceiver(Transform transform, MonoBehaviour monoBehaviour, Grid grid = null, int[,] roomGrid = null, System.Action onMoveCompleted = null)
         {
             _transform = transform;
+            _monoBehaviour = monoBehaviour;
             _grid = grid;
             _roomGrid = roomGrid;
             _lastPosition = _transform.position;
+            _onMoveCompleted = onMoveCompleted;
         }
 
         public void MoveBetweenRooms(Vector3Int direction)
         {
+            // Отменяем предыдущее перемещение, если оно есть
+            if (_currentMoveCoroutine != null)
+            {
+                _monoBehaviour.StopCoroutine(_currentMoveCoroutine);
+            }
+
             // Сохраняем текущую позицию перед перемещением
             _lastPosition = _transform.position;
-            
+
             // Если сетка комнаты не установлена, просто двигаемся в направлении
             if (_roomGrid == null)
             {
                 // В режиме без сетки просто двигаемся в указанном направлении
                 Vector3 targetPosition = _transform.position + new Vector3(direction.x, direction.y, 0);
-                _transform.position = targetPosition;
-                Debug.Log($"Player moved without grid to: {targetPosition}");
+                _currentMoveCoroutine = _monoBehaviour.StartCoroutine(SmoothMoveTo(targetPosition, () =>
+                {
+                    Debug.Log($"Player moved without grid to: {targetPosition}");
+                }));
             }
             else
             {
@@ -47,8 +63,10 @@ namespace Architecture.GlobalModules.Systems
                     if (_roomGrid[targetPosition.x, targetPosition.y] != 0)
                     {
                         Vector3 targetWorldPos = new Vector3(targetPosition.x, targetPosition.y, _transform.position.z);
-                        _transform.position = targetWorldPos;
-                        Debug.Log($"Player moved between rooms to: {targetWorldPos}");
+                        _currentMoveCoroutine = _monoBehaviour.StartCoroutine(SmoothMoveTo(targetWorldPos, () =>
+                        {
+                            Debug.Log($"Player moved between rooms to: {targetWorldPos}");
+                        }));
                     }
                     else
                     {
@@ -70,30 +88,76 @@ namespace Architecture.GlobalModules.Systems
 
         public void MoveInGrid(Vector3Int direction)
         {
+            // Отменяем предыдущее перемещение, если оно есть
+            if (_currentMoveCoroutine != null)
+            {
+                _monoBehaviour.StopCoroutine(_currentMoveCoroutine);
+            }
+
             // Сохраняем текущую позицию перед перемещением
             _lastPosition = _transform.position;
-            
+
             // Если сетка не установлена, просто двигаемся в направлении
             if (_grid == null)
             {
                 // В режиме без сетки просто двигаемся в указанном направлении
                 Vector3 targetPosition = _transform.position + new Vector3(direction.x, direction.y, 0);
-                _transform.position = targetPosition;
-                Debug.Log($"Player moved without grid to: {targetPosition}");
+                _currentMoveCoroutine = _monoBehaviour.StartCoroutine(SmoothMoveTo(targetPosition, () =>
+                {
+                    Debug.Log($"Player moved without grid to: {targetPosition}");
+                }));
             }
             else
             {
                 Vector3Int currentPosition = _grid.WorldToCell(_transform.position);
                 Vector3Int targetPosition = currentPosition + direction;
-                
+
                 Vector3 targetWorldPos = _grid.GetCellCenterWorld(targetPosition);
-                _transform.position = targetWorldPos;
-                Debug.Log($"Player moved in grid to: {targetWorldPos}");
+                _currentMoveCoroutine = _monoBehaviour.StartCoroutine(SmoothMoveTo(targetWorldPos, () =>
+                {
+                    Debug.Log($"Player moved in grid to: {targetWorldPos}");
+                }));
             }
+        }
+
+        private float _moveDuration = 0.2f; // Время перемещения
+
+        public void SetMoveDuration(float duration)
+        {
+            _moveDuration = duration;
+        }
+
+        private IEnumerator SmoothMoveTo(Vector3 targetPosition, System.Action onComplete = null)
+        {
+            Vector3 startPosition = _transform.position;
+            float elapsed = 0f;
+
+            while (elapsed < _moveDuration)
+            {
+                float progress = elapsed / _moveDuration;
+                _transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            // Убедимся, что точно достигли цели
+            _transform.position = targetPosition;
+
+            // Вызов коллбэка по завершении
+            onComplete?.Invoke();
+
+            // Уведомляем о завершении перемещения
+            _onMoveCompleted?.Invoke();
         }
 
         public void UndoMove()
         {
+            if (_currentMoveCoroutine != null)
+            {
+                _monoBehaviour.StopCoroutine(_currentMoveCoroutine);
+                _currentMoveCoroutine = null;
+            }
+
             _transform.position = _lastPosition;
             Debug.Log($"Player move undone, returned to: {_lastPosition}");
         }
@@ -105,18 +169,31 @@ namespace Architecture.GlobalModules.Systems
 
         public void SetPosition(Vector3 position)
         {
+            if (_currentMoveCoroutine != null)
+            {
+                _monoBehaviour.StopCoroutine(_currentMoveCoroutine);
+                _currentMoveCoroutine = null;
+            }
+
             _transform.position = position;
         }
 
         public void MoveToWorldPosition(Vector3 worldPosition)
         {
+            if (_currentMoveCoroutine != null)
+            {
+                _monoBehaviour.StopCoroutine(_currentMoveCoroutine);
+                _currentMoveCoroutine = null;
+            }
+
             // Сохраняем текущую позицию перед перемещением
             _lastPosition = _transform.position;
 
-            // Устанавливаем новую позицию
-            _transform.position = worldPosition;
-
-            Debug.Log($"Player moved to world position: {worldPosition}");
+            // Плавно перемещаемся в новую позицию
+            _currentMoveCoroutine = _monoBehaviour.StartCoroutine(SmoothMoveTo(worldPosition, () =>
+            {
+                Debug.Log($"Player moved to world position: {worldPosition}");
+            }));
         }
     }
 }

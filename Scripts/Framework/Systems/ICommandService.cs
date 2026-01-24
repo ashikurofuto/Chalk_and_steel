@@ -11,15 +11,22 @@ namespace Architecture.GlobalModules.Systems
         /// Инициализирует PlayerReceiver с необходимыми данными
         /// </summary>
         /// <param name="transform">Трансформ игрока</param>
+        /// <param name="monoBehaviour">MonoBehaviour для запуска корутин</param>
         /// <param name="grid">Сетка для перемещения в одной комнате</param>
         /// <param name="roomGrid">Массив комнат для перемещения между комнатами</param>
-        void InitializePlayerReceiver(Transform transform, Grid grid = null, int[,] roomGrid = null);
+        /// <param name="onMoveCompleted">Делегат, вызываемый при завершении перемещения</param>
+        void InitializePlayerReceiver(Transform transform, MonoBehaviour monoBehaviour, Grid grid = null, int[,] roomGrid = null, System.Action onMoveCompleted = null);
 
         /// <summary>
         /// Выполняет команду перемещения в сетке
         /// </summary>
         /// <param name="direction">Направление перемещения</param>
         void ExecuteMoveCommand(Vector3Int direction);
+
+        /// <summary>
+        /// Возвращает текущий PlayerReceiver
+        /// </summary>
+        PlayerReceiver GetPlayerReceiver();
 
         /// <summary>
         /// Выполняет команду перемещения между комнатами

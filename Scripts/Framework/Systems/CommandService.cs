@@ -30,18 +30,23 @@ namespace Architecture.GlobalModules.Systems
             }
         }
 
+        private MonoBehaviour _monoBehaviour;
+
         /// <summary>
         /// Инициализирует PlayerReceiver с необходимыми данными
         /// </summary>
         /// <param name="transform">Трансформ игрока</param>
+        /// <param name="monoBehaviour">MonoBehaviour для запуска корутин</param>
         /// <param name="grid">Сетка для перемещения в одной комнате</param>
         /// <param name="roomGrid">Массив комнат для перемещения между комнатами</param>
-        public void InitializePlayerReceiver(Transform transform, Grid grid = null, int[,] roomGrid = null)
+        /// <param name="onMoveCompleted">Делегат, вызываемый при завершении перемещения</param>
+        public void InitializePlayerReceiver(Transform transform, MonoBehaviour monoBehaviour, Grid grid = null, int[,] roomGrid = null, System.Action onMoveCompleted = null)
         {
             _playerTransform = transform;
+            _monoBehaviour = monoBehaviour;
             _grid = grid;
             _roomGrid = roomGrid;
-            _playerReceiver = new PlayerReceiver(transform, grid, roomGrid);
+            _playerReceiver = new PlayerReceiver(transform, monoBehaviour, grid, roomGrid, onMoveCompleted);
             Debug.Log("PlayerReceiver initialized with transform and grids");
         }
 
@@ -196,6 +201,14 @@ namespace Architecture.GlobalModules.Systems
 
             Debug.Log("CanMoveTo returning false - no valid grid or position out of bounds");
             return false;
+        }
+
+        /// <summary>
+        /// Возвращает текущий PlayerReceiver
+        /// </summary>
+        public PlayerReceiver GetPlayerReceiver()
+        {
+            return _playerReceiver;
         }
     }
 }

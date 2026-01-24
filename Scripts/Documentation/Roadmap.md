@@ -14,7 +14,7 @@
 - Реализовать CommandInvoker для управления очередью команд
 - Создать MoveCommand для перемещения игрока
 - Реализовать систему ввода через Input System
-- Создать PlayerController, PlayerModel, PlayerView
+- Создать PlayerReciever, PlayerModel, PlayerView
 - Связать ввод с командами перемещения
 
 ## Фаза 3: Grid система и мир

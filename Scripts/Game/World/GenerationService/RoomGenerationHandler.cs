@@ -153,7 +153,7 @@ public class RoomGenerationHandler : MonoBehaviour
                     if (_eventBus != null)
                     {
                         _eventBus.Publish(roomGeneratedEvent);
-                        Debug.Log($"Published RoomGeneratedEvent: SpawnPosition={spawnPosition}, RoomView={roomView}, EntryDirection={_entryDirection?.ToString() ?? "center"}");
+                        // Debug.Log($"Published RoomGeneratedEvent: SpawnPosition={spawnPosition}, RoomView={roomView}, EntryDirection={_entryDirection?.ToString() ?? "center"}"); // Закомментировано для уменьшения логов
                     }
                     else
                     {
@@ -301,69 +301,70 @@ public class RoomGenerationHandler : MonoBehaviour
     /// <returns>Позиция двери в тайлмапе</returns>
     private Vector3Int FindActualDoorPosition(RoomView roomView, DoorDirection direction)
     {
-        var bounds = roomView.floorTilemap.cellBounds;
+        // Вычисляем центр комнаты
+        Vector3Int center = new Vector3Int(
+            Mathf.RoundToInt(roomView.floorTilemap.cellBounds.center.x),
+            Mathf.RoundToInt(roomView.floorTilemap.cellBounds.center.y),
+            0
+        );
 
-        // Определяем область поиска в зависимости от направления
+        int distanceFromCenter = 5; // Фиксированное расстояние от центра, как в RoomView
+
+        // Определяем позицию двери в зависимости от направления
+        Vector3Int doorPosition = Vector3Int.zero;
+
         switch (direction)
         {
             case DoorDirection.Top:
-                // Ищем дверь в верхней части комнаты
-                for (int x = bounds.xMin; x < bounds.xMax; x++)
-                {
-                    Vector3Int pos = new Vector3Int(x, bounds.yMax - 1, 0);
-                    if (roomView.doorTilemap != null && roomView.doorTilemap.HasTile(pos))
-                    {
-                        // Нашли дверь, возвращаем позицию рядом с ней внутри комнаты
-                        return new Vector3Int(pos.x, pos.y - 1, pos.z); // Одна клетка вниз от двери
-                    }
-                }
-                // Если не нашли дверь, возвращаем стандартную позицию
-                return new Vector3Int(Mathf.RoundToInt(bounds.center.x), bounds.yMax - 2, 0);
+                // Верхняя дверь: на 5 единиц выше центра
+                doorPosition = new Vector3Int(center.x, center.y + distanceFromCenter, 0);
+                break;
 
             case DoorDirection.Bottom:
-                // Ищем дверь в нижней части комнаты
-                for (int x = bounds.xMin; x < bounds.xMax; x++)
-                {
-                    Vector3Int pos = new Vector3Int(x, bounds.yMin, 0);
-                    if (roomView.doorTilemap != null && roomView.doorTilemap.HasTile(pos))
-                    {
-                        // Нашли дверь, возвращаем позицию рядом с ней внутри комнаты
-                        return new Vector3Int(pos.x, pos.y + 1, pos.z); // Одна клетка вверх от двери
-                    }
-                }
-                // Если не нашли дверь, возвращаем стандартную позицию
-                return new Vector3Int(Mathf.RoundToInt(bounds.center.x), bounds.yMin + 1, 0);
+                // Нижняя дверь: на 5 единиц ниже центра
+                doorPosition = new Vector3Int(center.x, center.y - distanceFromCenter, 0);
+                break;
 
             case DoorDirection.Left:
-                // Ищем дверь в левой части комнаты
-                for (int y = bounds.yMin; y < bounds.yMax; y++)
-                {
-                    Vector3Int pos = new Vector3Int(bounds.xMin, y, 0);
-                    if (roomView.doorTilemap != null && roomView.doorTilemap.HasTile(pos))
-                    {
-                        // Нашли дверь, возвращаем позицию рядом с ней внутри комнаты
-                        return new Vector3Int(pos.x + 1, pos.y, pos.z); // Одна клетка вправо от двери
-                    }
-                }
-                // Если не нашли дверь, возвращаем стандартную позицию
-                return new Vector3Int(bounds.xMin + 1, Mathf.RoundToInt(bounds.center.y), 0);
+                // Левая дверь: на 5 единиц левее центра
+                doorPosition = new Vector3Int(center.x - distanceFromCenter, center.y, 0);
+                break;
 
             case DoorDirection.Right:
-                // Ищем дверь в правой части комнаты
-                for (int y = bounds.yMin; y < bounds.yMax; y++)
-                {
-                    Vector3Int pos = new Vector3Int(bounds.xMax - 1, y, 0);
-                    if (roomView.doorTilemap != null && roomView.doorTilemap.HasTile(pos))
-                    {
-                        // Нашли дверь, возвращаем позицию рядом с ней внутри комнаты
-                        return new Vector3Int(pos.x - 1, pos.y, pos.z); // Одна клетка влево от двери
-                    }
-                }
-                // Если не нашли дверь, возвращаем стандартную позицию
-                return new Vector3Int(bounds.xMax - 2, Mathf.RoundToInt(bounds.center.y), 0);
+                // Правая дверь: на 5 единиц правее центра
+                doorPosition = new Vector3Int(center.x + distanceFromCenter, center.y, 0);
+                break;
 
             default:
-                return new Vector3Int(Mathf.RoundToInt(bounds.center.x), Mathf.RoundToInt(bounds.center.y), 0);
+                return center;
+        }
+
+        // Проверяем, есть ли дверь в вычисленной позиции
+        if (roomView.doorTilemap != null && roomView.doorTilemap.HasTile(doorPosition))
+        {
+            // Нашли дверь, теперь возвращаем позицию рядом с ней внутри комнаты
+            switch (direction)
+            {
+                case DoorDirection.Top:
+                    return new Vector3Int(doorPosition.x, doorPosition.y - 1, doorPosition.z); // Одна клетка вниз от двери
+
+                case DoorDirection.Bottom:
+                    return new Vector3Int(doorPosition.x, doorPosition.y + 1, doorPosition.z); // Одна клетка вверх от двери
+
+                case DoorDirection.Left:
+                    return new Vector3Int(doorPosition.x + 1, doorPosition.y, doorPosition.z); // Одна клетка вправо от двери
+
+                case DoorDirection.Right:
+                    return new Vector3Int(doorPosition.x - 1, doorPosition.y, doorPosition.z); // Одна клетка влево от двери
+
+                default:
+                    return doorPosition;
+            }
+        }
+        else
+        {
+            // Если дверь не найдена в ожидаемой позиции, возвращаем центральную позицию
+            return center;
         }
     }
 

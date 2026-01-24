@@ -37,50 +37,62 @@ public class RoomView : MonoBehaviour
         // Вычисляем центральные координаты для каждой стороны
         Vector3Int doorPosition = Vector3Int.zero;
 
-        switch (direction)
-        {
-            case DoorDirection.Top:
-                // Верхняя сторона: центральная точка по X, максимальная по Y
-                doorPosition = new Vector3Int(
-                    Mathf.RoundToInt(bounds.center.x),
-                    bounds.max.y - 1, // -1 чтобы немного внутрь комнаты
-                    0);
-                break;
-                
-            case DoorDirection.Bottom:
-                // Нижняя сторона: центральная точка по X, минимальная по Y
-                doorPosition = new Vector3Int(
-                    Mathf.RoundToInt(bounds.center.x),
-                    bounds.min.y, // Убрали +1, чтобы дверь была на краю
-                    0);
-                break;
-                
-            case DoorDirection.Left:
-                // Левая сторона: минимальная точка по X, центральная по Y
-                doorPosition = new Vector3Int(
-                    bounds.min.x, // Убрали +1, чтобы дверь была на краю
-                    Mathf.RoundToInt(bounds.center.y),
-                    0);
-                break;
-                
-            case DoorDirection.Right:
-                // Правая сторона: максимальная точка по X, центральная по Y
-                doorPosition = new Vector3Int(
-                    bounds.max.x - 1, // -1 чтобы немного внутрь комнаты
-                    Mathf.RoundToInt(bounds.center.y),
-                    0);
-                break;
-        }
+        // Устанавливаем дверь на фиксированное расстояние от центра (5 единиц)
+        doorPosition = GetFixedDoorPosition(direction, bounds);
 
         // Удаляем стену в этой позиции
         wallTilemap.SetTile(doorPosition, null);
-        
+
         // Устанавливаем дверь в эту позицию
         doorTilemap.SetTile(doorPosition, doorTile);
-        
-        Debug.Log($"Door set at position {doorPosition} in direction {direction}");
+
+        // Debug.Log($"Door set at position {doorPosition} in direction {direction}, wall removed"); // Закомментировано для уменьшения логов
     }
-    
+
+    /// <summary>
+    /// Возвращает фиксированную позицию двери на расстоянии 5 от центра комнаты
+    /// </summary>
+    /// <param name="direction">Направление двери</param>
+    /// <param name="bounds">Границы тайлмапа</param>
+    /// <returns>Позиция для двери</returns>
+    private Vector3Int GetFixedDoorPosition(DoorDirection direction, BoundsInt bounds)
+    {
+        Vector3Int doorPosition = Vector3Int.zero;
+        int distanceFromCenter = 5; // Фиксированное расстояние от центра
+
+        // Вычисляем центр комнаты
+        Vector3Int center = new Vector3Int(
+            Mathf.RoundToInt(bounds.center.x),
+            Mathf.RoundToInt(bounds.center.y),
+            0
+        );
+
+        switch (direction)
+        {
+            case DoorDirection.Top:
+                // Верхняя дверь: на 5 единиц выше центра
+                doorPosition = new Vector3Int(center.x, center.y + distanceFromCenter, 0);
+                break;
+
+            case DoorDirection.Bottom:
+                // Нижняя дверь: на 5 единиц ниже центра
+                doorPosition = new Vector3Int(center.x, center.y - distanceFromCenter, 0);
+                break;
+
+            case DoorDirection.Left:
+                // Левая дверь: на 5 единиц левее центра
+                doorPosition = new Vector3Int(center.x - distanceFromCenter, center.y, 0);
+                break;
+
+            case DoorDirection.Right:
+                // Правая дверь: на 5 единиц правее центра
+                doorPosition = new Vector3Int(center.x + distanceFromCenter, center.y, 0);
+                break;
+        }
+
+        return doorPosition;
+    }
+
     /// <summary>
     /// Удаляет дверь из указанной стороны и восстанавливает стену
     /// </summary>
@@ -104,45 +116,14 @@ public class RoomView : MonoBehaviour
         }
         
         // Вычисляем ту же позицию, где была дверь
-        Vector3Int doorPosition = Vector3Int.zero;
-
-        switch (direction)
-        {
-            case DoorDirection.Top:
-                doorPosition = new Vector3Int(
-                    Mathf.RoundToInt(bounds.center.x),
-                    bounds.max.y - 1,
-                    0);
-                break;
-                
-            case DoorDirection.Bottom:
-                doorPosition = new Vector3Int(
-                    Mathf.RoundToInt(bounds.center.x),
-                    bounds.min.y + 1,
-                    0);
-                break;
-                
-            case DoorDirection.Left:
-                doorPosition = new Vector3Int(
-                    bounds.min.x + 1,
-                    Mathf.RoundToInt(bounds.center.y),
-                    0);
-                break;
-                
-            case DoorDirection.Right:
-                doorPosition = new Vector3Int(
-                    bounds.max.x - 1,
-                    Mathf.RoundToInt(bounds.center.y),
-                    0);
-                break;
-        }
+        Vector3Int doorPosition = GetFixedDoorPosition(direction, bounds);
 
         // Удаляем дверь
         doorTilemap.SetTile(doorPosition, null);
-        
+
         // Восстанавливаем стену
         wallTilemap.SetTile(doorPosition, wallTile);
-        
-        Debug.Log($"Door removed at position {doorPosition} in direction {direction}, wall restored");
+
+        // Debug.Log($"Door removed at position {doorPosition} in direction {direction}, wall restored"); // Закомментировано для уменьшения логов
     }
 }
